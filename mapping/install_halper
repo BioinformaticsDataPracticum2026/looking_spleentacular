@@ -1,0 +1,51 @@
+# here are the commands to install hal and halLiftover-postprocessing on the ocean cluster
+# the github link for the instruction is https://github.com/pfenninglab/halLiftover-postprocessing/blob/master/hal_install_instructions.md
+#############
+# Pay attention to the difference between the github link and the command lines
+# I downlaod all the thing and conda env in the project
+# bacuase my home directory (~) have some other items and the storage is limited.
+# I may change for easy usage version in the future
+
+# download hdf5
+wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.1/src/hdf5-1.10.1.tar.gz --no-check-certificate
+
+# git clone
+mkdir repos
+cd repos
+git clone https://github.com/ComparativeGenomicsToolkit/hal.git
+git clone https://github.com/pfenninglab/halLiftover-postprocessing.git
+
+module load anaconda3/2024.10-1
+
+conda create -p /ocean/projects/bio230007p/wli27/hal python=3 numpy matplotlib
+conda activate /ocean/projects/bio230007p/wli27/hal
+
+cd ..
+tar xzf hdf5-1.10.1.tar.gz
+mkdir /ocean/projects/bio230007p/wli27/repos/hal/hdf5
+
+cd /ocean/projects/bio230007p/wli27/hdf5-1.10.1
+./configure --enable-cxx --prefix /ocean/projects/bio230007p/wli27/repos/hal/hdf5
+
+cd /ocean/projects/bio230007p/wli27/hdf5-1.10.1
+make && make install
+
+cd /ocean/projects/bio230007p/wli27/repos
+
+git clone https://github.com/ComparativeGenomicsToolkit/sonLib.git
+pushd sonLib && make && popd
+
+export PATH=/ocean/projects/bio230007p/wli27/repos/hal/hdf5/bin:${PATH}
+export h5prefix=-prefix=/ocean/projects/bio230007p/wli27/repos/hal/hdf5
+
+cd /ocean/projects/bio230007p/wli27/repos/hal
+make 
+
+export PATH=/ocean/projects/bio230007p/wli27/repos/hal/bin:${PATH}
+export PYTHONPATH=/ocean/projects/bio230007p/wli27/repos/halLiftover-postprocessing:${PYTHONPATH}
+
+#### evey time for use
+module load anaconda3/2024.10-1 # improtant!!!
+conda activate /ocean/projects/bio230007p/wli27/hal
+export PATH=/ocean/projects/bio230007p/wli27/repos/hal/bin:${PATH}
+export PYTHONPATH=/ocean/projects/bio230007p/wli27/repos/halLiftover-postprocessing:${PYTHONPATH}
