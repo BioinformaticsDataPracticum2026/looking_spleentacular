@@ -1,0 +1,19 @@
+# human.narrowPeak is from idr.optimal_peak.narrowPeak for human
+# mouse_to_human is from Halper by idr.optimal_peak.narrowPeak for mouse
+# shared_region.narrowPeak, human_specific.narrowPeak and mouse_specific.narrowPeak are results by bedtool
+
+# Due to mapping, shared_region.narrowPeak, human_specific.narrowPeak and mouse_specific.narrowPeak, mouse_to_human
+# The original narrowPeak cols:
+1  chrom
+2  start
+3  end
+4  name
+5  score (0–1000)
+6  strand
+7  signalValue
+8  pValue (-log10)
+9  qValue (-log10)
+10 peak (summit offset)
+
+# Due to mapping, shared_region.narrowPeak, human_specific.narrowPeak and mouse_specific.narrowPeak, mouse_to_human.narrowPeak
+# the values in 5-9 is meaningless, may need to attach to raw narrowPeak for partten analysis
