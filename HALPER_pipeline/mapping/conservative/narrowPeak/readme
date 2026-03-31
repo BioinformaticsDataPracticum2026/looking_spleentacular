@@ -1,7 +1,0 @@
-human_conservative.sorted.narrowPeak: The raw sorted human open chromtin data
-human_specific_peaks_conservative.narrowPeak: Contain regions only in human open chromotin
-mouse_specific_peaks_conservative.narrowPeak: Contain regions only in mouse open chromotin
-mouse_to_human_conservative.sorted.narrowPeak: mapped mouse data into human coordination
-shared_peaks_conservative.narrowPeak: The shared region between the mouse and human open chromotin data
-
-Wait, there is an error. Currently do not use these files.
