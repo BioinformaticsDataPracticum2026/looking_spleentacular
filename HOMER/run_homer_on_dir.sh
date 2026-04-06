@@ -1,11 +1,25 @@
 #!/bin/bash
 
+#SBATCH --job-name=homer
+#SBATCH --output=homer_%j.log
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8        # HOMER can use multiple cores for motif finding
+#SBATCH --mem=48G                # findMotifsGenome.pl is memory intensive; 8G per file x 6
+#SBATCH --time=12:00:00          # motif finding can be slow; give plenty of buffer
+#SBATCH --account=bio230007p
+
 # Usage check
 if [ "$#" -lt 2 ]; then
     echo "Usage: $0 <narrowpeak_dir> <genome> [output_dir]"
     echo "Example: $0 ./narrowPeak hg38 ./homer_results"
     exit 1
 fi
+
+# Set HOMER path explicitly
+export PATH=/ocean/projects/bio230007p/mccreary/bin:$PATH
+
+# Set your working directory
+cd /ocean/projects/bio230007p/mccreary
 
 NARROWPEAK_DIR="$1"
 GENOME="$2"
@@ -86,7 +100,6 @@ for NARROWPEAK_FILE in "$NARROWPEAK_DIR"/*.narrowPeak; do
     echo "=== Done with $BASENAME! Results in: ${SAMPLE_DIR} ==="
     echo "  Annotated peaks : ${ANNO_FILE}"
     echo "  Motif results   : ${MOTIF_DIR}/homerResults.html"
-    echo "  GO results      : ${SAMPLE_DIR}/GO_results"
 
 done
 
