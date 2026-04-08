@@ -15,6 +15,5 @@ The detailed steps for installaion can be seen in [rGREAT](https://github.com/jo
 It is hard to install R in psc, so we just use the local script in the local computer.
 
 ### HOMER
-The scripts for running and analyzing HOMER output can be found in [HOMER](https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular/HOMER/README)
-
+The scripts for running and analyzing HOMER output can be found in [HOMER](https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular/blob/main/HOMER/README)
 ## Running
