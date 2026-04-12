@@ -1,3 +1,6 @@
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  stop("ggplot2 is not installed. Please install it on a login node.")
+}
 library(ggplot2)
 
 file_list <- list.files(path = "peak_types", pattern = "\\.txt$", full.names = TRUE)

@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=homer
 #SBATCH --output=homer_%j.log
-#SBATCH --error=homer_j%.err
+#SBATCH --error=homer_%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4        
 #SBATCH --mem=8000M                
@@ -23,13 +23,6 @@ export PATH=/ocean/projects/bio230007p/mccreary/bin:$PATH
 cd /ocean/projects/bio230007p/mccreary
 
 NARROWPEAK_DIR="$1"
-
-if [ "${NARROWPEAK_DIR%%_*}" == "mouse"]; then
-    GENOME="mm10"
-else
-    GENOME="hg38"
-fi
-
 OUT_DIR="${2:-./homer_results}"
 
 # Validate inputs
@@ -45,6 +38,12 @@ mkdir -p "$OUT_DIR"
 
 # --- Loop over all .narrowPeak files ---
 for NARROWPEAK_FILE in "$NARROWPEAK_DIR"/*.narrowPeak; do
+    # Set the correct genome
+    if [ "${NARROWPEAK_FILE%%_*}" == "mouse" ]; then
+        GENOME="mm10"
+    else
+        GENOME="hg38"
+    fi
 
     # Get the base name without extension (e.g. "shared_peaks_conservative")
     BASENAME=$(basename "$NARROWPEAK_FILE" .narrowPeak)
