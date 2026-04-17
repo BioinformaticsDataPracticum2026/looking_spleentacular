@@ -1,10 +1,11 @@
 # Bioinformatics Data Practicum Project
 
 # Data: Human and Mouse Adrenal Gland
+## Description(one person)
 
-## Introduction
+## Installation(different persons)
+### dependency(all the persons):
 
-## Installation
 ### HALPER
 The detailed steps for installaion can be seen in [install_hal](https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular/blob/main/HALPER_pipeline/mapping/install_halper)
 (need to updated)
@@ -16,4 +17,14 @@ It is hard to install R in psc, so we just use the local script in the local com
 
 ### HOMER
 The scripts for running and analyzing HOMER output can be found in [HOMER](https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular/blob/main/HOMER/README)
-## Running
+
+## Usage(one person)
+### data structure
+### input
+### highest level script
+### output
+
+### citation
+
+
+
