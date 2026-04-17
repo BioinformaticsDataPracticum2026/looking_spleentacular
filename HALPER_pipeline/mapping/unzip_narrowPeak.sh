@@ -14,8 +14,8 @@ export PATH=/ocean/projects/bio230007p/wli27/repos/hal/bin:${PATH}
 export PYTHONPATH=/ocean/projects/bio230007p/wli27/repos/halLiftover-postprocessing:${PYTHONPATH}
 
 cd /ocean/projects/bio230007p/wli27/MouseAtac/AdrenalGland/peak/idr_reproducibility
-zcat idr.optimal_peak.narrowPeak.gz > idr.optimal_peak.narrowPeak
+zcat idr.conservative_peak.narrowPeak.gz > idr.conservative_peak.narrowPeak
 
 cd /ocean/projects/bio230007p/wli27/HumanAtac/peak/idr_reproducibility
-zcat idr.optimal_peak.narrowPeak.gz > idr.optimal_peak.narrowPeak
+zcat idr.conservative_peak.narrowPeak.gz > idr.conservative_peak.narrowPeak
 
