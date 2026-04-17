@@ -39,7 +39,7 @@ mkdir -p "$OUT_DIR"
 # --- Loop over all .narrowPeak files ---
 for NARROWPEAK_FILE in "$NARROWPEAK_DIR"/*.narrowPeak; do
     # Set the correct genome
-    if [[ "$NARROWPEAK_FILE" == *mouse* ]]; then
+    if [[ "${NARROWPEAK_FILE,,}" == *mouse* ]]; then
         GENOME="mm10"
     else
         GENOME="hg38"
