@@ -1,0 +1,6 @@
+name_string	log_pval	pval	target_hits	target_pct	bg_hits	bg_pct	annotations
+4-GCCCCGCCCCCY,BestGuess:KLF17(Zf)/2cell-Klf17-CutnTag(GSE211845)/Homer(0.961)	-910.969428	1e-395	6793	32.13%	15153.4	19.72%	enhancer, promoter
+6-YAYTTCCGGY,BestGuess:Fli1(ETS)/CD8-FLI-ChIP-Seq(GSE20898)/Homer(0.989)	-622.945761	1e-270	3925	18.57%	8036.4	10.46%	enhancer, promoter
+17-GGCKTGCC,BestGuess:PB0180.1_Sp4_2/Jaspar(0.797)	-91.822627	1e-39	3314	15.68%	9640.9	12.55%	enhancer, promoter
+3-SRRCCAATCRVV,BestGuess:NFY(CCAAT)/Promoter/Homer(0.949)	-937.271142	1e-407	2225	10.53%	2848.9	3.71%	enhancer, promoter
+10-TSACGTSACK,BestGuess:CREB3L4/MA1475.2/Jaspar(0.948)	-387.381519	1e-168	2055	9.72%	3879.1	5.05%	enhancer, promoter

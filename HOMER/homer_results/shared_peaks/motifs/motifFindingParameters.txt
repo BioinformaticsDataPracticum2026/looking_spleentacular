@@ -1,0 +1,1 @@
+cmd = ./homer_results_updated/shared_peaks/peaks_homer.bed hg38 ./homer_results_updated/shared_peaks/motifs -size 200 -mask

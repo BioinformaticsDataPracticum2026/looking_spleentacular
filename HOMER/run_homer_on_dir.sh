@@ -1,29 +1,20 @@
-#!/bin/bash
-
-#SBATCH --job-name=homer
-#SBATCH --output=homer_%j.log
-#SBATCH --error=homer_%j.err
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4        
-#SBATCH --mem=8000M                
-#SBATCH --time=6:00:00          
-#SBATCH --account=bio230007p
-
 # Usage check
-if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 <narrowpeak_dir> [output_dir]"
-    echo "Example: $0 ./narrowPeak ./homer_results"
+if [ "$#" -lt 3 ]; then
+    echo "Usage: $0 <narrowpeak_dir> </bin path> [wd]"
+    echo "Example: $0 ./narrowPeak /ocean/projects/bio230007p/mccreary/bin ./"
     exit 1
 fi
 
 # Set HOMER path explicitly
-export PATH=/ocean/projects/bio230007p/mccreary/bin:$PATH
+#export PATH=/ocean/projects/bio230007p/mccreary/bin:$PATH
+export PATH="$1:$PATH"
 
 # Set your working directory
-cd /ocean/projects/bio230007p/mccreary
+#cd /ocean/projects/bio230007p/mccreary
+cd "${2:-$PWD}"
 
 NARROWPEAK_DIR="$1"
-OUT_DIR="${2:-./homer_results}"
+OUT_DIR="./homer_results"
 
 # Validate inputs
 if [ ! -d "$NARROWPEAK_DIR" ]; then
@@ -72,22 +63,8 @@ for NARROWPEAK_FILE in "$NARROWPEAK_DIR"/*.narrowPeak; do
 
     echo "      Converted -> ${BED_FILE}"
 
-    # --- 1. annotatePeaks.pl ---
-    echo "[1/2] Running annotatePeaks.pl..."
-    annotatePeaks.pl \
-        "$BED_FILE" \
-        "$GENOME" \
-        > "$ANNO_FILE" 2> "${SAMPLE_DIR}/annotatePeaks.log"
-
-    if [ $? -eq 0 ]; then
-        echo "      Annotation complete -> ${ANNO_FILE}"
-    else
-        echo "      Error in annotatePeaks.pl. Check ${SAMPLE_DIR}/annotatePeaks.log"
-        continue  # Skip to next file instead of exiting
-    fi
-
-    # --- 2. findMotifsGenome.pl ---
-    echo "[2/2] Running findMotifsGenome.pl..."
+    # --- 1. findMotifsGenome.pl ---
+    echo "[1/2] Running findMotifsGenome.pl..."
     findMotifsGenome.pl \
         "$BED_FILE" \
         "$GENOME" \
@@ -101,6 +78,23 @@ for NARROWPEAK_FILE in "$NARROWPEAK_DIR"/*.narrowPeak; do
     else
         echo "      Error in findMotifsGenome.pl. Check ${SAMPLE_DIR}/findMotifs.log"
         continue
+    fi
+
+    # --- 2. annotatePeaks.pl with motif output integration ---
+    echo "[2/2] Running annotatePeaks.pl..."
+    annotatePeaks.pl \
+        "$BED_FILE" \
+        "$GENOME" \
+        -m "${MOTIF_DIR}/nonRedundant.motifs" \
+        -mbed "${SAMPLE_DIR}/motif_instances.bed" \
+        -size 200 \
+        > "$ANNO_FILE" 2> "${SAMPLE_DIR}/annotatePeaks.log"
+
+    if [ $? -eq 0 ]; then
+        echo "      Annotation complete -> ${ANNO_FILE}"
+    else
+        echo "      Error in annotatePeaks.pl. Check ${SAMPLE_DIR}/annotatePeaks.log"
+        continue  # Skip to next file instead of exiting
     fi
 
     echo "=== Done with $BASENAME! Results in: ${SAMPLE_DIR} ==="

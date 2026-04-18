@@ -1,24 +1,13 @@
-#!/bin/bash
-
-#SBATCH --job-name=annotation
-#SBATCH --output=annotation_%j.log
-#SBATCH --error=annotation_%j.err
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=2000M
-#SBATCH --time=0:30:00
-#SBATCH --account=bio230007p
-
-if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 <homer_results_dir> [output_dir]"
-    echo "Example: $0 ./homer_results ./peak_types"
+if [ "$#" -gt 1 ]; then
+    echo "Usage: $0 [wd]"
+    echo "This script takes only an optional wd argument"
     exit 1
 fi
 
-cd /ocean/projects/bio230007p/mccreary
+cd "${1:-$PWD}"
 
-HOMER_RESULTS_DIR="$1"
-OUT_DIR="${2:-./peak_types}"
+HOMER_RESULTS_DIR="./homer_results"
+OUT_DIR="./filtered_annotations"
 
 mkdir -p "$OUT_DIR"
 
@@ -35,11 +24,17 @@ for dir in "$HOMER_RESULTS_DIR"/*/; do
     awk -F'\t' 'BEGIN {OFS="\t"}
     NR==1 {
         id=1
+        n_motifs=0
         for (i=2; i<=NF; i++) {
             if ($i=="Annotation") annot=i
             if ($i=="Distance to TSS") dist=i
+            if ($i ~ /Distance From Peak/) motif_cols[n_motifs++]=i
         }
-        print "PeakID", "Annotation"
+        header = "PeakID\tAnnotation"
+        for (m=0; m<n_motifs; m++) {
+            header = header "\t" $motif_cols[m]
+        }
+        print header
         next
     }
     {
@@ -51,7 +46,11 @@ for dir in "$HOMER_RESULTS_DIR"/*/; do
         }
 
         if (new_annot != ""){
-            print $id, new_annot
+            row = $id "\t" new_annot
+            for (m=0; m<n_motifs; m++) {
+                row = row "\t" $motif_cols[m]
+            }
+            print row
         }
         
     }' "$input" > "$output"
@@ -59,3 +58,4 @@ for dir in "$HOMER_RESULTS_DIR"/*/; do
 done
 
 Rscript plot_promoters_enhancers.R
+Rscript motif_table.R

@@ -1,0 +1,1 @@
+cmd = ./homer_results_updated/mouse_specific/peaks_homer.bed mm10 ./homer_results_updated/mouse_specific/motifs -size 200 -mask

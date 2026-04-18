@@ -1,7 +1,11 @@
 
-	Peak file = homer_results/shared_peaks/peaks_homer.bed
+	Peak file = ./homer_results_updated/shared_peaks/peaks_homer.bed
 	Genome = hg38
 	Organism = human
+	Motif files:
+		./homer_results_updated/shared_peaks/motifs/nonRedundant.motifs	-m
+	Will produce a motif bed file: ./homer_results_updated/shared_peaks/motif_instances.bed
+	Peak Region set to 200
 	Peak/BED file conversion summary:
 		BED/Header formatted lines: 21410
 		peakfile formatted lines: 0
@@ -16,9 +20,66 @@
 
 	Peak file looks good!
 
+	Resizing peaks...
+	Peak/BED file conversion summary:
+		BED/Header formatted lines: 0
+		peakfile formatted lines: 21410
+		Duplicated Peak IDs: 0
+
+	Peak File Statistics:
+		Total Peaks: 21410
+		Redundant Peak IDs: 0
+		Peaks lacking information: 0 (need at least 5 columns per peak)
+		Peaks with misformatted coordinates: 0 (should be integer)
+		Peaks with misformatted strand: 0 (should be either +/- or 0/1)
+
+	Peak file looks good!
+
+	Extracting Sequence...
+	Custom genome sequence directory: /ocean/projects/bio230007p/mccreary/.//data/genomes/hg38/
+
+	Extracting sequences from file: /ocean/projects/bio230007p/mccreary/.//data/genomes/hg38//genome.fa
+	Looking for peak sequences in a single file (/ocean/projects/bio230007p/mccreary/.//data/genomes/hg38//genome.fa)
+	Extracting 2279 sequences from chr1
+	Extracting 1019 sequences from chr10
+	Extracting 1361 sequences from chr11
+	Extracting 1224 sequences from chr12
+	Extracting 413 sequences from chr13
+	Extracting 753 sequences from chr14
+	Extracting 746 sequences from chr15
+	Extracting 797 sequences from chr16
+	Extracting 1358 sequences from chr17
+	Extracting 327 sequences from chr18
+	Extracting 973 sequences from chr19
+	Extracting 1520 sequences from chr2
+	Extracting 628 sequences from chr20
+	Extracting 165 sequences from chr21
+	Extracting 440 sequences from chr22
+	Extracting 1320 sequences from chr3
+	Extracting 775 sequences from chr4
+	Extracting 1149 sequences from chr5
+	Extracting 970 sequences from chr6
+	Extracting 931 sequences from chr7
+	Extracting 749 sequences from chr8
+	Extracting 951 sequences from chr9
+	Extracting 562 sequences from chrX
 	Reading Positions...
+	Calculating CpG/GC Content of Peaks
+
+	Sequences processed:
+		Auto detected maximum sequence length of 201 bp
+		21410 total
+
 	-----------------------
-	offset=0
+	offset=-100
+	Looking for Motifs...
+
+	Reading input files...
+	21410 total sequences read
+	22 motifs loaded
+	Finding instances of 22 motif(s)
+	|0%                                    50%                                  100%|
+	=================================================================================
 	Finding Closest TSS...
 	Annotating:.......................
 		Annotation	Number of peaks	Total size (bp)	Log2 Ratio (obs/exp)	LogP enrichment (+values depleted)

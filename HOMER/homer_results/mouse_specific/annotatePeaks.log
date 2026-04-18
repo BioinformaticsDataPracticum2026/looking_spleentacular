@@ -1,7 +1,11 @@
 
-	Peak file = homer_results/mouse_specific/peaks_homer.bed
-	Genome = hg38
-	Organism = human
+	Peak file = ./homer_results_updated/mouse_specific/peaks_homer.bed
+	Genome = mm10
+	Organism = mouse
+	Motif files:
+		./homer_results_updated/mouse_specific/motifs/nonRedundant.motifs	-m
+	Will produce a motif bed file: ./homer_results_updated/mouse_specific/motif_instances.bed
+	Peak Region set to 200
 	Peak/BED file conversion summary:
 		BED/Header formatted lines: 8366
 		peakfile formatted lines: 0
@@ -16,64 +20,118 @@
 
 	Peak file looks good!
 
+	Resizing peaks...
+	Peak/BED file conversion summary:
+		BED/Header formatted lines: 0
+		peakfile formatted lines: 8366
+		Duplicated Peak IDs: 0
+
+	Peak File Statistics:
+		Total Peaks: 8366
+		Redundant Peak IDs: 0
+		Peaks lacking information: 0 (need at least 5 columns per peak)
+		Peaks with misformatted coordinates: 0 (should be integer)
+		Peaks with misformatted strand: 0 (should be either +/- or 0/1)
+
+	Peak file looks good!
+
+	Extracting Sequence...
+	Custom genome sequence directory: /ocean/projects/bio230007p/mccreary/.//data/genomes/mm10/
+
+	Extracting sequences from directory: /ocean/projects/bio230007p/mccreary/.//data/genomes/mm10/
+	Extracting 541 sequences from chr1
+	Extracting 750 sequences from chr2
+	Extracting 427 sequences from chr3
+	Extracting 518 sequences from chr4
+	Extracting 485 sequences from chr5
+	Extracting 457 sequences from chr6
+	Extracting 465 sequences from chr7
+	Extracting 456 sequences from chr8
+	Extracting 470 sequences from chr9
+	Extracting 511 sequences from chr10
+	Extracting 578 sequences from chr11
+	Extracting 360 sequences from chr12
+	Extracting 379 sequences from chr13
+	Extracting 313 sequences from chr14
+	Extracting 348 sequences from chr15
+	Extracting 315 sequences from chr16
+	Extracting 348 sequences from chr17
+	Extracting 335 sequences from chr18
+	Extracting 210 sequences from chr19
+	Extracting 100 sequences from chrX
 	Reading Positions...
+	Calculating CpG/GC Content of Peaks
+
+	Sequences processed:
+		Auto detected maximum sequence length of 201 bp
+		8366 total
+
 	-----------------------
-	offset=0
+	offset=-100
+	Looking for Motifs...
+
+	Reading input files...
+	8366 total sequences read
+	16 motifs loaded
+	Finding instances of 16 motif(s)
+	|0%                                    50%                                  100%|
+	=================================================================================
 	Finding Closest TSS...
 	Annotating:....................
 		Annotation	Number of peaks	Total size (bp)	Log2 Ratio (obs/exp)	LogP enrichment (+values depleted)
-		3UTR	74.0	25637096	-0.015	0.705
-		miRNA	0.0	95758	-0.355	0.279
-		ncRNA	16.0	6533733	-0.253	1.248
-		TTS	103.0	30404350	0.216	-2.618
-		pseudo	4.0	1963209	-0.518	1.130
-		Exon	109.0	35444572	0.076	-1.194
-		Intron	3419.0	1200228794	-0.034	3.376
-		Intergenic	4558.0	1530877422	0.029	-3.780
-		Promoter	77.0	33830387	-0.358	4.309
-		5UTR	6.0	2508595	-0.287	0.908
-		snoRNA	0.0	275	-0.001	0.001
-		scRNA	0.0	97	-0.000	0.000
+		3UTR	123.0	20931892	0.886	-21.842
+		miRNA	0.0	34262	-0.149	0.109
+		ncRNA	45.0	4421991	1.678	-23.922
+		TTS	83.0	28468393	-0.125	1.466
+		pseudo	1.0	578215	-0.879	0.796
+		Exon	294.0	35013924	1.401	-108.106
+		Intron	4052.0	962088562	0.405	-248.827
+		Intergenic	3133.0	1545159908	-0.649	771.178
+		Promoter	564.0	31483328	2.494	-528.202
+		5UTR	71.0	2374057	3.233	-98.847
+		snoRNA	0.0	19	-0.000	0.000
+		rRNA	0.0	5631	-0.026	0.018
 	NOTE: If this part takes more than 2 minutes, there is a good chance
 		your machine ran out of memory: consider hitting ctrl+C and rerunning
 		the command with "-noann"
 	To capture annotation stats in a file, use "-annStats <filename>" next time
 	Annotating:....................
 		Annotation	Number of peaks	Total size (bp)	Log2 Ratio (obs/exp)	LogP enrichment (+values depleted)
-		3UTR	74.0	25637096	-0.015	0.702
-		Retroposon	16.0	3811723	0.526	-2.316
-		RC?	1.0	58890	2.542	-1.847
-		RNA	0.0	102183	-0.376	0.298
-		miRNA	0.0	95758	-0.355	0.279
-		ncRNA	16.0	6533733	-0.252	1.246
-		TTS	103.0	30404350	0.216	-2.628
-		LINE	1737.0	601854682	-0.015	1.138
-		srpRNA	1.0	243675	0.493	-0.676
-		SINE	1046.0	355545920	0.013	-0.957
-		RC	0.0	340267	-0.994	0.992
-		tRNA	0.0	88393	-0.331	0.258
-		DNA?	0.0	410922	-1.136	1.198
-		pseudo	4.0	1963209	-0.517	1.128
-		DNA	279.0	94309760	0.021	-0.888
-		Exon	109.0	35444572	0.077	-1.200
-		Intron	1771.0	626483265	-0.045	2.640
-		Intergenic	2163.0	690755675	0.103	-9.390
-		Promoter	77.0	33830387	-0.357	4.296
-		5UTR	6.0	2508595	-0.286	0.907
-		snoRNA	0.0	275	-0.001	0.001
-		LTR?	2.0	1093279	-0.673	0.961
-		scRNA	1.0	115001	1.576	-1.256
-		CpG-Island	19.0	8116791	-0.317	1.621
-		Low_complexity	13.0	5098200	-0.193	0.978
-		LTR	677.0	245755057	-0.082	2.774
-		Simple_repeat	92.0	31671833	-0.006	0.668
-		snRNA	0.0	295776	-0.897	0.863
-		Unknown	1.0	692061	-1.013	0.913
-		SINE?	0.0	2674	-0.011	0.008
-		Satellite	157.0	65662598	-0.286	5.221
-		rRNA	1.0	154266	1.153	-1.015
+		3UTR	123.0	20931892	0.886	-21.869
+		Other	0.0	7145139	-4.571	22.744
+		RC?	0.0	10979	-0.049	0.035
+		RNA	0.0	113962	-0.446	0.362
+		miRNA	0.0	34262	-0.149	0.109
+		ncRNA	45.0	4421991	1.679	-23.936
+		TTS	83.0	28468393	-0.125	1.460
+		LINE	112.0	520779584	-3.886	1410.325
+		LINE?	0.0	8168	-0.037	0.026
+		srpRNA	0.0	42953	-0.185	0.137
+		SINE	71.0	193418762	-3.114	412.166
+		RC	0.0	65629	-0.273	0.209
+		tRNA	0.0	265758	-0.884	0.845
+		DNA?	1.0	142070	1.147	-1.012
+		pseudo	1.0	578215	-0.878	0.795
+		DNA	32.0	28318869	-1.492	27.353
+		Exon	294.0	35013924	1.401	-108.190
+		Intron	3795.0	609603944	0.970	-996.424
+		Intergenic	2953.0	773369385	0.264	-71.279
+		Promoter	564.0	31483328	2.495	-528.416
+		5UTR	71.0	2374057	3.234	-98.876
+		snoRNA	0.0	19	-0.000	0.000
+		LTR?	3.0	192386	2.294	-3.719
+		scRNA	0.0	576021	-1.502	1.831
+		CpG-Island	119.0	2981731	3.650	-195.502
+		Low_complexity	8.0	18457473	-2.875	36.714
+		LTR	77.0	292469782	-3.594	711.041
+		Simple_repeat	7.0	55203169	-4.648	149.517
+		snRNA	0.0	236385	-0.809	0.751
+		Unknown	6.0	1202308	0.651	-1.673
+		SINE?	0.0	29758	-0.130	0.095
+		Satellite	1.0	3651494	-3.537	9.080
+		rRNA	0.0	165619	-0.610	0.526
 	Counting Tags in Peaks from each directory...
-	Organism: human
+	Organism: mouse
 	Loading Gene Informaiton...
 	Outputing Annotation File...
 	Done annotating peaks file

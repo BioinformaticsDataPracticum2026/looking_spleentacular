@@ -1,0 +1,6 @@
+name_string	log_pval	pval	target_hits	target_pct	bg_hits	bg_pct	annotations
+1-ACTTCCTGTY,BestGuess:ERG(ETS)/VCaP-ERG-ChIP-Seq(GSE14097)/Homer(0.973)	-2348.498414	1e-1019	4224	51.59%	16261.8	18.08%	enhancer, promoter
+11-DGCCWGCCAR,BestGuess:MYRF(MYRF)/CFPAC1-MYRF-ChIP-Seq(GSE145627)/Homer(0.735)	-170.246622	1e-73	3331	40.68%	27991.1	31.12%	enhancer, promoter
+15-RGCCCCACCC,BestGuess:KLF4/MA0039.5/Jaspar(0.956)	-115.882372	1e-50	1345	16.43%	9824.2	10.92%	enhancer, promoter
+7-NCCATTGTTY,BestGuess:Sox17(HMG)/Endoderm-Sox17-ChIP-Seq(GSE61475)/Homer(0.980)	-323.233026	1e-140	1126	13.75%	5451.8	6.06%	enhancer, promoter
+8-GGCHSNVTGCCA,BestGuess:NF1(CTF)/LNCAP-NF1-ChIP-Seq(Unpublished)/Homer(0.892)	-258.353369	1e-112	1024	12.51%	5245.6	5.83%	enhancer, promoter

@@ -1,0 +1,1 @@
+cmd = ./homer_results_updated/human_specific/peaks_homer.bed hg38 ./homer_results_updated/human_specific/motifs -size 200 -mask
