@@ -1,7 +1,8 @@
 # Bioinformatics Data Practicum Project
+Data used here: Human and Mouse Adrenal Gland
 
-# Data: Human and Mouse Adrenal Gland
-## Description(one person)
+## Description (needs more)
+The purpose of this pipeline is to provide complete analysis of IDR-conservative ATAC-Seq peak data for mouse and human samples. It takes heirarchial alignment files (.hal) and conducts peak mapping, annotation of promoters and enhancers, motif enrichment, and GO analysis.
 
 ## Installation(different persons)
 ### dependency(all the persons):
@@ -14,6 +15,10 @@
 		* HALPER has been tested using matplotlib versions 1.5.1, 2.2.3, 3.2.1
 * HALPER has been tested on Linux (CentOS 6, CentOS 7, and Ubuntu 18.04.4), Windows (Windows 10), and Mac
 
+This tool was designed for a Linux SLURM cluster. To ensure smooth execution of complete_analysis_pipeline.sh, install the following to your cluster environment before running:
+- R (including ggplot2, tidyverse)
+- HOMER (including the genomes hg38 and mm10)
+
 ### HALPER
 The detailed steps for installaion can be seen in [install_hal](https://github.com/pfenninglab/halLiftover-postprocessing/blob/master/hal_install_instructions.md)
 
@@ -24,10 +29,10 @@ module load anaconda3/2024.10-1
 
 ### rGREAT
 The detailed steps for installaion can be seen in [rGREAT](https://github.com/jokergoo/rgreat).
-It is hard to install R in psc, so we just use the local script in the local computer.
+It is hard to install R in psc, so for isolated analysis we just use the local script in the local computer.
 
 ### HOMER
-The scripts for running and analyzing HOMER output can be found in [HOMER](https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular/blob/main/HOMER/README)
+The individual scripts for running and analyzing HOMER output can be found in [HOMER](https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular/blob/main/HOMER/README)
 
 ## Usage(one person)
 
