@@ -6,27 +6,28 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4        
 #SBATCH --mem=8000M                
-#SBATCH --time=15:00:00          
+#SBATCH --time=18:00:00          
 #SBATCH --account=bio230007p
 
 set -euo pipefail
 
 SCRIPT_DIR="$SLURM_SUBMIT_DIR"
-WD="${3:-}"
 
-# NEED TO UPDATE: make sure we have all path convensions are standardized, finalize SLURM job requirements
+# NEED TO FINALIZE INPUTS (is .hal only one peak set?)
 if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 <narrowpeak_dir> <bin_path> [wd]"
-    echo "Example: $0 ./narrowPeak /ocean/projects/bio230007p/mccreary/bin ./"
+    echo "Usage: $0 <.hal filepath> <halper_map_peak_orthologs.sh path> <bin_path>"
     exit 1
 fi
 
+HAL_FILE=$1
+HALPER_MAP_SH=$2
+BIN_PATH=$3
 
 # NEED TO COPY ALL RELEVANT SCRIPTS INTO DIRECTORY
-echo "Starting mapping with integrate_halper.sh..."
-bash "$SCRIPT_DIR/integrate_halper.sh" # inputs...
+echo "Starting mapping with integrate_halper.sh..." # should produce narrowPeak dir
+bash "$SCRIPT_DIR/integrate_halper.sh" "$SCRIPT_DIR" "$HAL_FILE" "$HALPER_MAP"
 echo "Starting motif enrichment and peak annotation with run_homer_on_dir.sh..."
-bash "$SCRIPT_DIR/run_full_annotatePeaks_findMotifs.sh" # inputs...
+bash "$SCRIPT_DIR/run_full_annotatePeaks_findMotifs.sh" "./narrowPeak" "$BIN_PATH" # should prouduce ./homer_results dir and ./filered_annotations dir
 echo "Starting GO BP enrichment with rGREAT run_GO_pipeline.sh..."
-bash "$SCRIPT_DIR/run_GO_pipeline.sh" # inputs...
+bash "$SCRIPT_DIR/run_GO_pipeline.sh" "./filtered_annotations" # should produce ./rGREAT_results dir
 echo "Done."

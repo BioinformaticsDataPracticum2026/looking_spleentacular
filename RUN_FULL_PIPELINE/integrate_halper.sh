@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# integrate_halper_homer.sh
+# integrate_halper.sh
 # =============================================================================
 # WORKFLOW
 #   1) unzip_narrowPeak.sh     — unzip conservative IDR peaks (optional).
@@ -11,19 +11,10 @@
 #                                in mouse coordinates.
 #
 # Usage:
-#   bash integrate_halper_homer.sh --base DIR --hal-file PATH.hal --halper-map PATH/halper_map_peak_orthologs.sh
+#   bash integrate_halper.sh --base DIR --hal-file PATH.hal --halper-map PATH/halper_map_peak_orthologs.sh
 # Optional: --conda-env, --hal-bin, --halper-pp (see parse_args / defaults below).
 #
 # =============================================================================
-#SBATCH -A bio230007p
-#SBATCH -p RM-shared
-#SBATCH --time=12:00:00
-#SBATCH -n 1
-#SBATCH --mem=2000
-#SBATCH -o integrate_halper_homer_%j.out
-#SBATCH -e integrate_halper_homer_%j.err
-#SBATCH -J integrate_halper_homer
-
 set -euo pipefail
 
 # Directory containing this script
@@ -42,7 +33,7 @@ HALPER_PP=""
 
 usage() {
   cat <<'EOF'
-Usage: integrate_halper_homer.sh --base DIR [options]
+Usage: integrate_halper.sh --base DIR [options]
 
 Required:
   --base DIR              Project root
