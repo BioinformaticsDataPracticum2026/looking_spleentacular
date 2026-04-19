@@ -1,6 +1,6 @@
 # Bioinformatics Data Practicum Project
+Data used here: Human and Mouse Adrenal Gland
 
-# Data: Human and Mouse Adrenal Gland
 ## Description (needs more)
 The purpose of this pipeline is to provide complete analysis of IDR-conservative ATAC-Seq peak data for mouse and human samples. It takes heirarchial alignment files (.hal) and conducts peak mapping, annotation of promoters and enhancers, motif enrichment, and GO analysis.
 
