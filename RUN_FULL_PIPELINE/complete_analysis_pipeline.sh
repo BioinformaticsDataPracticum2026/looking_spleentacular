@@ -44,6 +44,9 @@ ls ./narrowPeak_for_homer/
 echo "Starting motif enrichment and peak annotation with run_homer_on_dir.sh..."
 bash "$SCRIPT_DIR/run_full_annotatePeaks_findMotifs.sh" "./narrowPeak_for_homer" "$BIN_PATH" # should prouduce ./homer_results dir and ./filered_annotations dir
 
+echo "Starting enhancer_promoter_analysis.py..."
+python "$SCRIPT_DIR/enhancer_promoter_analysis.py" --input-dir "./filtered_annotations" # should produce motif_annotation_split dir
+
 echo "Starting GO BP enrichment with rGREAT run_GO_pipeline.sh..."
 bash "$SCRIPT_DIR/run_GO_pipeline.sh" "./filtered_annotations" # should produce ./rGREAT_results dir
 echo "Done."
