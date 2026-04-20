@@ -22,20 +22,20 @@ HAL_FILE=$1
 HALPER_MAP_SH=$2
 BIN_PATH=$3
 
-echo "Starting mapping with integrate_halper.sh..." # will produce "./output/Mouse/mapping/conservative", condensed into a narrowPeak file afterwards
+echo "Starting mapping with integrate_halper.sh..." # will produce "./results/conservative/narrowPeak/"
 bash "$SCRIPT_DIR/integrate_halper.sh" "$SCRIPT_DIR" "$HAL_FILE" "$HALPER_MAP"
 
 # reformat narrowPeak output for downstream use
 echo "Extracting relevant files for homer analysis..."
 mkdir -p ./narrowPeak_for_homer
 
-cp "./output/Mouse/mapping/conservative/shared_peaks_conservative.narrowPeak" \
+cp "./results/conservative/narrowPeak/shared_peaks_conservative.narrowPeak" \
    "./narrowPeak_for_homer/shared_peaks.narrowPeak"
 
-cp "./output/Mouse/mapping/conservative/human_specific_peaks_conservative.narrowPeak" \
+cp "./results/conservative/narrowPeak/human_specific_peaks_conservative.narrowPeak" \
    "./narrowPeak_for_homer/human_specific.narrowPeak"
 
-cp "./output/Mouse/mapping/conservative/mouse_specific_peaks_conservative.mouse_coords.narrowPeak" \
+cp "./results/conservative/narrowPeak/mouse_specific_peaks_conservative.mouse_coords.narrowPeak" \
    "./narrowPeak_for_homer/mouse_specific.narrowPeak"
 
 echo "Done. Files in ./narrowPeak_for_homer:"
