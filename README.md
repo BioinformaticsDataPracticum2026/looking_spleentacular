@@ -1,53 +1,58 @@
 # Bioinformatics Data Practicum Project
-The purpose of this pipeline is to provide complete analysis of IDR-conservative ATAC-Seq peak data for mouse and human samples. It takes heirarchial alignment files (.hal) and conducts peak mapping, annotation of promoters and enhancers, motif enrichment, and GO analysis.
+The purpose of this pipeline is to provide complete analysis of IDR-conservative ATAC-Seq peak data for mouse and human samples. It takes a heirarchial alignment file (.hal) and conducts peak mapping, annotation of promoters and enhancers, motif enrichment, and GO analysis.
 
 This analysis used human and mouse ATAC-Seq data from healthy adrenal gland tissue in female subjects. Human data was from the ENCODE database (ENCSR241OBO and ENCSR864ADD) and mouse data was from Liu et al., Scientific Data, 2019. Reference genomes used throughout analysis were hg38 and mm10 respectively. 
+
 ## Tutorial
 👉 [Open Tutorial](https://BioinformaticsDataPracticum2026.github.io/looking_spleentacular/tutorial.html)
-## Installation
-### Dependencies:
-This tool was designed for a Linux SLURM cluster. To ensure smooth execution of complete_analysis_pipeline.sh, install the following to your cluster environment bin before running:
+## Installation Instructions:
+This tool was designed for a Linux SLURM cluster. To ensure smooth execution of COMPLETE_ANALYSIS_PIPELINE.sh, complete the following:
 
-#### HALPER
-* Python version 3.6 or 3.7 (https://www.python.org/downloads/release/python-371/)
-* Python libraries `matplotlib` and `numpy`
-	* numpy (http://www.numpy.org/)
-		* HALPER has been tested using numpy versions 1.14.3, 1.16.0, 1.16.4, 1.16.6, and 1.18.2
-	* matplotlib (https://matplotlib.org/downloads.html)
-		* HALPER has been tested using matplotlib versions 1.5.1, 2.2.3, 3.2.1
-* HALPER has been tested on Linux (CentOS 6, CentOS 7, and Ubuntu 18.04.4), Windows (Windows 10), and Mac
+### 1. Download the RUN_FULL_PIPELINE directory
+This folder contains the COMPLETE_ANALYSIS_PIPELINE.sh script as well as all dependent scripts. Copy this folder into your Linux cluster environment and treat it as your base directory when installing the rest of the dependencies.
 
-#### HOMER
-- R (including ggplot2, tidyverse)
-- HOMER (including the genomes hg38 and mm10)
-
-## Each step of the pipeline can also be used individually:
-
-### HALPER
-The detailed steps for installaion can be seen in [install_hal](https://github.com/pfenninglab/halLiftover-postprocessing/blob/master/hal_install_instructions.md)
-
-Since the whole process is used in PSC, the part for Anaconda installation can be replaced with 
+### 2. Set up dependencies with conda
+Set up the environment
 ```
-module load anaconda3/2024.10-1
+module load anaconda3
+conda create -n atac_seq_analysis python 3.7
+conda activate atac_seq_analysis
 ```
 
-### rGREAT
-The detailed steps for installaion can be seen in [rGREAT](https://github.com/jokergoo/rgreat).
-It is hard to install R in psc, so for isolated analysis we just use the local script in the local computer.
+Install the following simulteneously or individually as necessary, if not using a fresh environment
+```
+conda install -c matplotlib numpy wget R
+# verify installation using conda list <package name>
+```
 
-### HOMER
-The individual scripts for running and analyzing HOMER output can be found in [HOMER](https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular/blob/main/HOMER/README)
+Open an R environment for the following steps:
+```
+install.packages("tidyverse")
+if(!require("BiocManager", quiety=TRUE))
+	install.packages("BiocManager")
+BiocManager::install("rGREAT")
+```
 
-## Usage
+### 3. Install HOMER and genomes
+```
+wget http://homer.ucsd.edu/homer/configureHomer.pl
+perl configureHomer.pl -install homer && perl configureHomer.pl -install hg38 && perl configureHomer.pl -install mm10
+```
 
-### input
-To run the full pipeline, users can copy the "RUN_FULL_PIPELINE" directory into a Linux SLURM cluster. This directory contains the script "COMPLETE_ANALYSIS_PIPELINE.sh" which can be run as such:
+### 4. Install HALPER
+See detailed instructions at the [original repository](https://github.com/pfenninglab/halLiftover-postprocessing/blob/master/hal_install_instructions.md)
+
+
+## USAGE
+
+### Input
+To run the full pipeline, users can submit a slurm job of COMPLETE_ANALYSIS_PIPELINE.sh using the following command:
 
 ```
 sbatch COMPLETE_ANALYSIS_PIPELINE.sh <.hal filepath> <halper_map_peak_orthologs.sh path> <bin_path>"
 ```
 
-### output
+### Output
 COMPLETE_ANALYSIS_PIPELINE.sh will conduct peak mapping, annotation, motif enrichment, and GO analysis. The output will be organized as follows:
 
 ```
@@ -97,7 +102,16 @@ RUN_FULL_PIPELINE/
     └── tsvs...
 ```
 
-## Data Structure
+## Citations and Acknowledgements
+This project was conducted for 03-713 Bioinformatics Data Practicum at Carnegie Mellon University, Spring 2026. Authors include Wen Li, Makayla McCreary, Guanyang Wang, and Ushta Samal.
+
+Dependencies retreived from:
+- BEDTools: Quinlan & Hall (2010)
+- HALPER: Pfenning Lab
+- HOMER: Heinz et al. (2010)
+- rGREAT: Gu et al. (2016)
+
+## Appendix: Suggested Data Structure
 ### BASE/ (tools and raw peaks only)
 
 ```
@@ -119,58 +133,4 @@ BASE/
     ├── idr.conservative_peak.narrowPeak.gz
     └── idr.conservative_peak.narrowPeak
 ```
-
-#### Mapping Results
-mouse_to_human_conservative.narrowPeak: Mapped Peaks from mouse into human genome
-```
-chr1	960807	960976	chr4:156234671-156235043:194	-1	.	-1	-1	-1	15
-```
-human_specific_peaks_conservative.narrowPeak: Peaks only in human data
-```
-chr1	180738	181589	.	590	.	2.31421	15.43961	13.78570	398
-
-```
-mouse_specific_peaks_conservative.mouse_coords.narrowPeak: Peak only in mouse data
-```
-chr4	156031565	156032576	.	663	.	5.01463	24.19597	21.65876	591
-```
-shared_peaks_conservative.narrowPeak: Peaks in both mouse and human data
-```
-chr1	960807	960976	chr4:156234671-156235043:194	-1	.	-1	-1	-1	15
-```
-
-### Full Repository Structure `looking_spleentacular/` (mapped peaks + analyses)
-
-```
-looking_spleentacular/
-├── HALPER_pipeline/mapping/
-│   ├── *.sh                            # jobs
-│   └── results/conservative/           # HALPER gzip + bedtools products used here
-│       ├── idr.conservative_peak.MouseToHuman.HALPER.narrowPeak.gz
-│       └── narrowPeak/
-│           ├── mouse_to_human_conservative.narrowPeak
-│           ├── mouse_to_human_conservative.sorted.narrowPeak
-│           ├── human_conservative.sorted.narrowPeak
-│           ├── shared_peaks_conservative.narrowPeak
-│           ├── mouse_specific_peaks_conservative.narrowPeak
-│           ├── human_specific_peaks_conservative.narrowPeak
-│           └── mouse_specific_peaks_conservative.mouse_coords.narrowPeak
-├── HOMER/
-│   ├── narrowPeak/                   
-│   ├── homer_results/<category>/     # findMotifs + annotatePeaks (motifs/, logs, BEDs)
-│   └── filtered_annotations/           # promoter/enhancer labels + motif tables + plots
-├── HOMER_evaluation/              
-├── GO_pipeline/
-│   ├── my_peaks/                    
-│   └── rGREAT_results/               
-├── GO_plot/
-├── liftOver_pipeline/
-│   ├── scripts/                    
-│   ├── peak_sets/
-│   └── go_analysis/
-├── rGREAT/
-├── rGREAT_0415/
-└── *.ipynb
-```
-
 
