@@ -56,13 +56,11 @@ BASE/
 │       ├── halper_map_peak_orthologs.sh    # default --halper-map (full path to this file)
 │       └── …
 │
-├── MouseAtac/AdrenalGland/peak/idr_reproducibility/
-│   ├── idr.conservative_peak.narrowPeak.gz
-│   └── idr.conservative_peak.narrowPeak
-│
-└── HumanAtac/peak/idr_reproducibility/
-    ├── idr.conservative_peak.narrowPeak.gz
-    └── idr.conservative_peak.narrowPeak
+├── idr_reproducibility/
+│   ├──MouseAtac
+│   	└── idr.conservative_peak.narrowPeak.gz
+│	└── HumanAtac
+│    	└── idr.conservative_peak.narrowPeak.gz
 ```
 
 ## USAGE
