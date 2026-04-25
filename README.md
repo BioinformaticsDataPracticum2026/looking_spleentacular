@@ -42,6 +42,28 @@ perl configureHomer.pl -install homer && perl configureHomer.pl -install hg38 &&
 ### 4. Install HALPER
 See detailed instructions at the [original repository](https://github.com/pfenninglab/halLiftover-postprocessing/blob/master/hal_install_instructions.md)
 
+### 5. Setup data directories
+Add the directories with narrowPeak data to the current setup:
+
+```
+BASE/
+├── hal/                                    # conda env (--conda-env), e.g. conda activate …/hal
+│   └── …
+│
+├── repos/                                  # HAL tools + HALPER checkout
+│   ├── hal/bin/                            # HAL binaries (--hal-bin); on PATH (halLiftover, …)
+│   └── halLiftover-postprocessing/         # HALPER (--halper-pp for PYTHONPATH)
+│       ├── halper_map_peak_orthologs.sh    # default --halper-map (full path to this file)
+│       └── …
+│
+├── MouseAtac/AdrenalGland/peak/idr_reproducibility/
+│   ├── idr.conservative_peak.narrowPeak.gz
+│   └── idr.conservative_peak.narrowPeak
+│
+└── HumanAtac/peak/idr_reproducibility/
+    ├── idr.conservative_peak.narrowPeak.gz
+    └── idr.conservative_peak.narrowPeak
+```
 
 ## USAGE
 
@@ -114,27 +136,4 @@ Dependencies retreived from:
 - HALPER: Pfenning Lab
 - HOMER: Heinz et al. (2010)
 - rGREAT: Gu et al. (2016)
-
-## Appendix: Suggested Data Structure
-### BASE/ (tools and raw peaks only)
-
-```
-BASE/
-├── hal/                                    # conda env (--conda-env), e.g. conda activate …/hal
-│   └── …
-│
-├── repos/                                  # HAL tools + HALPER checkout
-│   ├── hal/bin/                            # HAL binaries (--hal-bin); on PATH (halLiftover, …)
-│   └── halLiftover-postprocessing/         # HALPER (--halper-pp for PYTHONPATH)
-│       ├── halper_map_peak_orthologs.sh    # default --halper-map (full path to this file)
-│       └── …
-│
-├── MouseAtac/AdrenalGland/peak/idr_reproducibility/
-│   ├── idr.conservative_peak.narrowPeak.gz
-│   └── idr.conservative_peak.narrowPeak
-│
-└── HumanAtac/peak/idr_reproducibility/
-    ├── idr.conservative_peak.narrowPeak.gz
-    └── idr.conservative_peak.narrowPeak
-```
 
