@@ -7,37 +7,46 @@
   <style>
     :root {
       --blue:    #2563eb;
-      --indigo:  #4f46e5;
+      --indigo:  #4338ca;
       --purple:  #7c3aed;
-      --teal:    #0d9488;
-      --green:   #16a34a;
-      --amber:   #d97706;
+      --teal:    #0f766e;
+      --green:   #15803d;
+      --amber:   #b45309;
       --red:     #dc2626;
       --gray-50: #f9fafb;
       --gray-100:#f3f4f6;
       --gray-200:#e5e7eb;
+      --gray-300:#d1d5db;
       --gray-400:#9ca3af;
+      --gray-500:#6b7280;
       --gray-600:#4b5563;
       --gray-700:#374151;
       --gray-800:#1f2937;
       --gray-900:#111827;
-      --radius:  8px;
-      --shadow:  0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.08);
-      --shadow-lg: 0 10px 25px rgba(0,0,0,.1);
+      --radius:  12px;
+      --shadow:  0 10px 24px rgba(15, 23, 42, .08), 0 2px 6px rgba(15, 23, 42, .05);
+      --shadow-lg: 0 22px 50px rgba(15, 23, 42, .14);
+      --border: 1px solid rgba(148, 163, 184, .18);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--gray-50);
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, .08), transparent 28%),
+        radial-gradient(circle at top right, rgba(15, 118, 110, .08), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #f6f8fc 52%, #f9fafb 100%);
       color: var(--gray-800);
       line-height: 1.7;
     }
 
     /* ── Hero ───────────────────────────────────────────────── */
     .hero {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #1e40af 100%);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(125, 211, 252, .18), transparent 24%),
+        radial-gradient(circle at 80% 0%, rgba(45, 212, 191, .14), transparent 28%),
+        linear-gradient(135deg, #0f172a 0%, #172554 42%, #0f766e 100%);
       color: #fff;
       padding: 64px 24px 80px;
       text-align: center;
@@ -48,16 +57,19 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.06), transparent 35%),
+        url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M36 10l6.5 19.8H63L46.2 42l6.4 20L36 49.6 19.4 62l6.4-20L9 29.8h20.5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
     .hero-badge {
       display: inline-block;
-      background: rgba(255,255,255,.15);
-      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
       border-radius: 99px;
-      padding: 4px 14px;
-      font-size: .8rem;
-      letter-spacing: .08em;
+      padding: 6px 16px;
+      font-size: .76rem;
+      letter-spacing: .12em;
       text-transform: uppercase;
       margin-bottom: 20px;
     }
@@ -72,7 +84,7 @@
       max-width: 640px;
       margin: 0 auto;
       font-size: 1.05rem;
-      opacity: .85;
+      opacity: .9;
       position: relative;
     }
 
@@ -93,7 +105,8 @@
       z-index: 1;
     }
     .overview-card {
-      background: #fff;
+      background: rgba(255,255,255,.96);
+      border: var(--border);
       border-radius: var(--radius);
       padding: 20px;
       box-shadow: var(--shadow-lg);
@@ -149,7 +162,8 @@
 
     /* ── Card ───────────────────────────────────────────────── */
     .card {
-      background: #fff;
+      background: rgba(255,255,255,.94);
+      border: var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
@@ -162,7 +176,8 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      border-bottom: 1px solid var(--gray-100);
+      border-bottom: 1px solid rgba(148, 163, 184, .14);
+      background: linear-gradient(180deg, rgba(248, 250, 252, .95), rgba(255,255,255,.88));
     }
     .card-body {
       padding: 20px;
@@ -181,6 +196,8 @@
     .code-wrap {
       background: var(--gray-900);
       border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 18px 32px rgba(15, 23, 42, .14);
       overflow: hidden;
       margin: 12px 0;
     }
@@ -248,7 +265,8 @@
       align-items: center;
       background: #fff;
       border: 2px solid currentColor;
-      border-radius: 10px;
+      border-radius: 14px;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, .08);
       padding: 10px 18px;
       min-width: 160px;
       text-align: center;
@@ -276,6 +294,8 @@
       gap: 12px;
       margin: 16px 0;
       font-size: .88rem;
+      border: var(--border);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, .05);
     }
     .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
     .callout.info    { background: #eff6ff; border-left: 4px solid var(--blue); }
@@ -332,9 +352,9 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--gray-200);
+      background: rgba(255,255,255,.8);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(148, 163, 184, .18);
       padding: 12px 24px;
     }
     .toc-inner {
@@ -353,10 +373,14 @@
       font-size: .78rem;
       font-weight: 500;
       padding: 5px 10px;
-      border-radius: 6px;
-      transition: background .15s, color .15s;
+      border-radius: 999px;
+      transition: background .15s, color .15s, transform .15s;
     }
-    .toc-link:hover { background: var(--gray-100); color: var(--gray-900); }
+    .toc-link:hover {
+      background: rgba(37, 99, 235, .08);
+      color: var(--gray-900);
+      transform: translateY(-1px);
+    }
 
     /* ── Divider ─────────────────────────────────────────────── */
     .divider {
@@ -405,6 +429,54 @@
     main {
       padding: 48px 0 64px;
     }
+
+    .soft-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,250,252,.92));
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .quickstart-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 10px;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 8px;
+      color: var(--gray-700);
+      font-size: .88rem;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    .mini-note {
+      font-size: .8rem;
+      color: var(--gray-600);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 780px) {
+      .quickstart-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -449,21 +521,21 @@
       </div>
     </div>
     <div class="overview-card">
-      <div class="overview-icon bg-indigo" style="color:#fff;">🗺️</div>
+      <div class="overview-icon bg-indigo" style="color:#fff;">🔗</div>
       <div>
         <h3>Ortholog Mapping</h3>
         <p>HALtools + HALPER lifts mouse peaks to human coordinates</p>
       </div>
     </div>
     <div class="overview-card">
-      <div class="overview-icon bg-teal" style="color:#fff;">🔬</div>
+      <div class="overview-icon bg-teal" style="color:#fff;">✂️</div>
       <div>
         <h3>Peak Classes</h3>
         <p>Shared, human-specific, and mouse-specific open-chromatin regions</p>
       </div>
     </div>
     <div class="overview-card">
-      <div class="overview-icon bg-purple" style="color:#fff;">📊</div>
+      <div class="overview-icon bg-purple" style="color:#fff;">📈</div>
       <div>
         <h3>Functional Analysis</h3>
         <p>HOMER motifs, enhancer/promoter annotation, and rGREAT GO enrichment</p>
@@ -499,7 +571,7 @@
           <div class="flow-vline"></div>
           <div class="flow-row">
             <div class="flow-node c-purple" style="min-width:200px;">
-              <div class="node-icon">🎯</div>
+              <div class="node-icon">🧩</div>
               <div class="node-label">integrate_halper.sh</div>
               <div class="node-sub">Mouse-coord narrowPeak rebuild</div>
             </div>
@@ -507,13 +579,13 @@
           <div class="flow-vline"></div>
           <div class="flow-row">
             <div class="flow-node c-green">
-              <div class="node-icon">📌</div>
+              <div class="node-icon">🧬</div>
               <div class="node-label">HOMER annotation</div>
               <div class="node-sub">annotatePeaks + findMotifs</div>
             </div>
             <div class="flow-arrow">→</div>
             <div class="flow-node c-teal">
-              <div class="node-icon">🏷️</div>
+              <div class="node-icon">🧾</div>
               <div class="node-label">extract_promoters_enhancers.sh</div>
               <div class="node-sub">Filter + classify regions</div>
             </div>
@@ -521,13 +593,13 @@
           <div class="flow-vline"></div>
           <div class="flow-row">
             <div class="flow-node c-blue">
-              <div class="node-icon">🔎</div>
+              <div class="node-icon">🔬</div>
               <div class="node-label">enhancer_promoter_analysis.py</div>
               <div class="node-sub">Motif-per-condition lists</div>
             </div>
             <div class="flow-arrow" style="font-size:1.2rem;">→</div>
             <div class="flow-node c-amber">
-              <div class="node-icon">🧪</div>
+              <div class="node-icon">📈</div>
               <div class="node-label">rgreat_pipeline.R</div>
               <div class="node-sub">GO:BP / MF / CC enrichment</div>
             </div>
@@ -551,7 +623,7 @@
 
     <div class="card">
       <div class="card-header c-blue">
-        <span>📋</span> What this step does
+        <span>🧬</span> What this step does
       </div>
       <div class="card-body">
         <p>Loads the <strong>conda/HAL environment</strong> and decompresses the
@@ -609,7 +681,7 @@
 
     <div class="card">
       <div class="card-header c-indigo">
-        <span>🗺️</span> What this step does
+        <span>🔗</span> What this step does
       </div>
       <div class="card-body">
         <p>Uses <strong>HALtools</strong> (the Hierarchical Alignment Format) and
@@ -742,7 +814,7 @@
     </div>
 
     <div class="callout tip">
-      <div class="callout-icon">💡</div>
+      <div class="callout-icon">🧠</div>
       <div>The <code>-u</code> flag reports each query feature once if it overlaps any subject feature
       (regardless of how many times). The <code>-v</code> flag is the complement —
       query features with <em>no</em> overlap.</div>
@@ -761,7 +833,7 @@
 
     <div class="card">
       <div class="card-header c-green">
-        <span>📌</span> What this step does
+        <span>🧬</span> What this step does
       </div>
       <div class="card-body">
         <p>For each of the three peak sets
@@ -860,7 +932,7 @@
 
     <div class="card">
       <div class="card-header c-teal">
-        <span>🏷️</span> What this step does
+        <span>🧾</span> What this step does
       </div>
       <div class="card-body">
         <p>Parses each <code>annotated_peaks.txt</code> file with <strong>awk</strong>
@@ -915,9 +987,9 @@ NR==1 {
       <thead><tr><th>Type</th><th>File</th><th>Description</th></tr></thead>
       <tbody>
         <tr><td><span class="badge badge-blue">Input</span></td><td><code>homer_results/*/annotated_peaks.txt</code></td><td>Full HOMER annotation (one per peak set)</td></tr>
-        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/shared_peaks.txt</code></td><td>Enhancer+promoter rows only, with motif cols</td></tr>
-        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/human_specific.txt</code></td><td>Same for human-specific peaks</td></tr>
-        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/mouse_specific.txt</code></td><td>Same for mouse-specific peaks</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/shared_peaks.txt</code></td><td>Enhancer/promoter-filtered rows for the shared peak set</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/human_specific.txt</code></td><td>Filtered annotations for the human-specific peak set</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/mouse_specific.txt</code></td><td>Filtered annotations for the mouse-specific peak set</td></tr>
         <tr><td><span class="badge badge-purple">Plot</span></td><td><code>filtered_annotations/*.png</code></td><td>Enhancer vs promoter bar charts</td></tr>
         <tr><td><span class="badge badge-purple">Table</span></td><td><code>filtered_annotations/*_motif_table.tsv</code></td><td>Top-N motifs per sample with annotations</td></tr>
       </tbody>
@@ -936,10 +1008,10 @@ NR==1 {
 
     <div class="card">
       <div class="card-header c-purple">
-        <span>🔎</span> What this step does
+        <span>🔬</span> What this step does
       </div>
       <div class="card-body">
-        <p>Reads the <code>filtered_annotations/</code> TSV files and produces
+        <p>Reads the <code>filtered_annotations/</code> tables generated from HOMER and produces
         <strong>motif presence lists per biological assignment condition</strong>.
         A motif is included if it has ≥ 1 non-empty hit in a given peak set
         and annotation category:</p>
@@ -1005,11 +1077,11 @@ mouse_specific_enhancers_motifs.txt</pre>
 
     <div class="card">
       <div class="card-header c-amber">
-        <span>🧪</span> What this step does
+        <span>📈</span> What this step does
       </div>
       <div class="card-body">
         <p>Runs <strong>rGREAT</strong> (Genomic Regions Enrichment of Annotations Tool)
-        on each of the four peak categories to find enriched Gene Ontology terms:</p>
+        on the four peak sets resolved by <code>run_GO_pipeline.sh</code> to find enriched Gene Ontology terms:</p>
         <ul>
           <li>Reads 3-column BED (chr, start, end) from each narrowPeak file;
               non-standard chromosomes are filtered out.</li>
@@ -1039,9 +1111,18 @@ mouse_specific_enhancers_motifs.txt</pre>
         <span class="dot dot-green"></span>
         run_GO_pipeline.sh – Usage
       </div>
-      <pre><code><span class="fn">bash</span> run_GO_pipeline.sh  \
-  ./filtered_annotations \   <span class="cm"># directory containing .narrowPeak files</span>
-  ./rGREAT_results            <span class="cm"># output directory (default: rGREAT_results)</span></code></pre>
+      <pre><code><span class="fn">bash</span> run_GO_pipeline.sh \
+  ./filtered_annotations \   <span class="cm"># directory scanned for the 4 expected peak files</span>
+  ./rGREAT_results           <span class="cm"># output directory (default: rGREAT_results)</span></code></pre>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div><code>run_GO_pipeline.sh</code> currently locates input files by filename pattern, including
+      <code>*mouse_specific_peaks_conservative*.narrowPeak</code>,
+      <code>*human_specific_peaks_conservative*.narrowPeak</code>,
+      <code>*mouse_to_human_conservative*.narrowPeak</code>, and
+      <code>*human_conservative*.narrowPeak</code>.</div>
     </div>
 
     <div class="code-wrap">
@@ -1071,7 +1152,7 @@ p &lt;- <span class="fn">ggplot</span>(plot_tbl, <span class="fn">aes</span>(x =
     </div>
 
     <div class="callout output">
-      <div class="callout-icon">📊</div>
+      <div class="callout-icon">📈</div>
       <div>
         <strong>Output files in <code>rGREAT_results/</code>:</strong>
         <ul style="margin-top:8px; font-size:.82rem;">
@@ -1090,7 +1171,7 @@ p &lt;- <span class="fn">ggplot</span>(plot_tbl, <span class="fn">aes</span>(x =
   <!-- ═══ QUICKSTART ═══ -->
   <section class="section" id="quickstart">
     <div class="section-header">
-      <div class="step-badge" style="background:var(--gray-800);">🚀</div>
+      <div class="step-badge" style="background:var(--gray-800);">⚙️</div>
       <div>
         <h2>Quickstart — Run the Full Pipeline</h2>
         <div class="subtitle">complete_analysis_pipeline.sh <span class="tag tag-sh">bash</span> <span class="tag tag-slurm">SLURM</span></div>
@@ -1100,7 +1181,7 @@ p &lt;- <span class="fn">ggplot</span>(plot_tbl, <span class="fn">aes</span>(x =
     <div class="callout info">
       <div class="callout-icon">ℹ️</div>
       <div>The master script <code>complete_analysis_pipeline.sh</code> orchestrates
-      all steps end-to-end. Submit it to SLURM with the two required arguments.</div>
+      mapping, HOMER annotation, promoter/enhancer splitting, motif summarization, and GO analysis end-to-end. Submit it to SLURM with the two required arguments.</div>
     </div>
 
     <div class="code-wrap">
@@ -1110,23 +1191,46 @@ p &lt;- <span class="fn">ggplot</span>(plot_tbl, <span class="fn">aes</span>(x =
         <span class="dot dot-green"></span>
         One-command submission
       </div>
-      <pre><code><span class="fn">sbatch</span> complete_analysis_pipeline.sh \
+      <pre><code><span class="fn">cd</span> RUN_FULL_PIPELINE
+
+<span class="fn">sbatch</span> complete_analysis_pipeline.sh \
   /path/to/10plusway-master.hal \            <span class="cm"># ARG 1: .hal alignment file</span>
-  /path/to/halper_map_peak_orthologs.sh \    <span class="cm"># ARG 2: HALPER script</span>
-  /path/to/homer/bin                         <span class="cm"># ARG 3: HOMER bin directory</span></code></pre>
+  /path/to/halper_map_peak_orthologs.sh      <span class="cm"># ARG 2: HALPER mapping script</span></code></pre>
+    </div>
+
+    <div class="quickstart-grid">
+      <div class="soft-panel">
+        <div style="font-size:.86rem; font-weight:700; color:var(--gray-800); margin-bottom:6px;">Before you submit</div>
+        <ul class="checklist">
+          <li>Run from the <code>RUN_FULL_PIPELINE/</code> directory, because the script uses <code>${SLURM_SUBMIT_DIR}</code> as its base path.</li>
+          <li>Place HOMER executables under <code>RUN_FULL_PIPELINE/bin/</code>; the pipeline now picks up <code>BIN_PATH="$SCRIPT_DIR/bin"</code> automatically.</li>
+          <li>Keep the repository helper scripts in the same directory as <code>complete_analysis_pipeline.sh</code>.</li>
+          <li>Ensure the HAL alignment file and <code>halper_map_peak_orthologs.sh</code> path are absolute or resolvable from the submit location.</li>
+        </ul>
+      </div>
+      <div class="soft-panel">
+        <div style="font-size:.86rem; font-weight:700; color:var(--gray-800); margin-bottom:6px;">Pipeline order</div>
+        <ul class="checklist">
+          <li><code>integrate_halper.sh</code></li>
+          <li><code>run_full_annotatePeaks_findMotifs.sh</code></li>
+          <li><code>enhancer_promoter_analysis.py</code></li>
+          <li><code>run_GO_pipeline.sh</code></li>
+        </ul>
+        <div class="mini-note">Intermediate directories are created relative to the submission directory.</div>
+      </div>
     </div>
 
     <div class="card" style="margin-top:20px;">
       <div class="card-header" style="color:var(--gray-700);">
-        <span>📋</span> SLURM resource request
+        <span>⚙️</span> SLURM resource request
       </div>
       <div class="card-body">
         <table class="io-table">
           <thead><tr><th>Parameter</th><th>Value</th><th>Note</th></tr></thead>
           <tbody>
-            <tr><td>CPUs</td><td>4</td><td>Parallelism for HOMER and BEDTools</td></tr>
-            <tr><td>Memory</td><td>8 GB</td><td>Adequate for HOMER on IDR peaks</td></tr>
-            <tr><td>Wall time</td><td>18 h</td><td>Conservative; HALPER + HOMER are the bottleneck</td></tr>
+            <tr><td>CPUs</td><td>4</td><td>Matches <code>--cpus-per-task=4</code> in the script header</td></tr>
+            <tr><td>Memory</td><td>8 GB</td><td>Matches <code>--mem=8000M</code></td></tr>
+            <tr><td>Wall time</td><td>18 h</td><td>Matches <code>--time=18:00:00</code>; HALPER and HOMER remain the slowest stages</td></tr>
             <tr><td>Account</td><td>bio230007p</td><td>PSC Bridges-2 allocation</td></tr>
           </tbody>
         </table>
@@ -1134,9 +1238,12 @@ p &lt;- <span class="fn">ggplot</span>(plot_tbl, <span class="fn">aes</span>(x =
     </div>
 
     <div class="card" style="margin-top:16px;">
-      <div class="card-header" style="color:var(--gray-700);"><span>📁</span> Expected output layout after full run</div>
+      <div class="card-header" style="color:var(--gray-700);"><span>🗂️</span> Expected output layout after full run</div>
       <div class="card-body">
         <pre style="font-size:.82rem; color:var(--gray-700); background:var(--gray-50); padding:16px; border-radius:6px; border:1px solid var(--gray-200); overflow-x:auto; line-height:1.8;">$WORKDIR/
+├── bin/
+│   ├── annotatePeaks.pl
+│   └── findMotifsGenome.pl
 ├── narrowPeak_for_homer/
 │   ├── shared_peaks.narrowPeak
 │   ├── human_specific.narrowPeak
@@ -1176,20 +1283,20 @@ p &lt;- <span class="fn">ggplot</span>(plot_tbl, <span class="fn">aes</span>(x =
     <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:20px; color:var(--gray-700);">Dependencies &amp; Requirements</h2>
     <div class="two-col">
       <div class="card">
-        <div class="card-header"><span>🛠️</span> Software</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>HALtools</strong> — whole-genome alignment tools (conda env)</li>
-            <li><strong>HALPER</strong> — halLiftover-postprocessing suite</li>
-            <li><strong>BEDTools</strong> ≥ 2.29 (module load bedtools)</li>
-            <li><strong>HOMER</strong> — annotatePeaks.pl, findMotifsGenome.pl</li>
-            <li><strong>Python</strong> ≥ 3.8 (stdlib only)</li>
-            <li><strong>R</strong> ≥ 4.1 with rGREAT, ggplot2, tidyverse</li>
-          </ul>
+        <div class="card-header"><span>⚙️</span> Software</div>
+      <div class="card-body">
+        <ul>
+          <li><strong>HALtools</strong> — whole-genome alignment tools (conda env)</li>
+          <li><strong>HALPER</strong> — halLiftover-postprocessing suite</li>
+          <li><strong>BEDTools</strong> ≥ 2.29 (module load bedtools)</li>
+          <li><strong>HOMER</strong> — <code>annotatePeaks.pl</code>, <code>findMotifsGenome.pl</code>, placed under <code>RUN_FULL_PIPELINE/bin/</code></li>
+          <li><strong>Python</strong> ≥ 3.8 (stdlib only)</li>
+          <li><strong>R</strong> ≥ 4.1 with rGREAT, ggplot2, tidyverse</li>
+        </ul>
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><span>📦</span> R packages (auto-installed)</div>
+        <div class="card-header"><span>🧬</span> R packages (auto-installed)</div>
         <div class="card-body">
           <ul>
             <li><strong>rGREAT</strong> — Bioconductor GO enrichment</li>
