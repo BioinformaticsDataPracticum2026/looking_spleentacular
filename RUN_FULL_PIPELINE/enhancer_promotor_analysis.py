@@ -20,7 +20,7 @@ from pathlib import Path
 
 
 def default_filtered_dir() -> Path:
-    return Path(__file__).resolve().parents[2] / "HOMER" / "filtered_annotations"
+    return Path(__file__).resolve().parents[2] / "filtered_annotations"
 
 
 def default_out_dir() -> Path:
@@ -67,7 +67,7 @@ def main() -> Path:
     )
     args = p.parse_args()
 
-    fd, out_dir = args.filtered_dir, args.out_dir
+    fd, out_dir = args.input_dir, args.output_dir
     shared = fd / "shared_peaks.txt"
     human_sp = fd / "human_specific.txt"
     mouse_sp = fd / "mouse_specific.txt"

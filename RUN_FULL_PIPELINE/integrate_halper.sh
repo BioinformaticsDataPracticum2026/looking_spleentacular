@@ -83,16 +83,6 @@ parse_args() {
 
 parse_args "$@"
 
-# load hal environment
-setup_hal_env() {
-  module load anaconda3/2024.10-1
-  set +u
-  conda activate "${CONDA_ENV}"
-  set -u
-  export PATH="${HAL_BIN}:${PATH}"
-  export PYTHONPATH="${HALPER_PP}:${PYTHONPATH:-}"
-}
-
 # -----------------------------------------------------------------------------
 # Step 1 — Unzip conservative IDR narrowPeaks(optional)
 # -----------------------------------------------------------------------------
@@ -103,7 +93,8 @@ step_unzip() {
 
 # Step 2 — Map mouse conservative peaks to human coordinates via HALPER.
 step_halper() {
-  #setup_hal_env
+  export PATH="${HAL_BIN}:${PATH}"
+  export PYTHONPATH="${HALPER_PP}:${PYTHONPATH:-}"
   mkdir -p "${HALPER_OUT}"
   bash "${HALPER_MAP_SH}" \
     -b "${MOUSE_CONSERVATIVE_NARROWPEAK}" \

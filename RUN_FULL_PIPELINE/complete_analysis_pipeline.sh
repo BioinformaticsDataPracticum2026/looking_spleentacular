@@ -10,6 +10,10 @@
 #SBATCH --time=18:00:00          
 #SBATCH --account=bio230007p
 
+module load anaconda3
+source /opt/packages/anaconda3-2024.10-1/etc/profile.d/conda.sh
+conda activate atac_seq_analysis
+
 set -euo pipefail
 
 SCRIPT_DIR="${SLURM_SUBMIT_DIR:-$(pwd -P)}"
@@ -48,12 +52,12 @@ echo "Starting motif enrichment and peak annotation with run_homer_on_dir.sh..."
 bash "$SCRIPT_DIR/run_full_annotatePeaks_findMotifs.sh" "./narrowPeak_for_homer" "$BIN_PATH" # should prouduce ./homer_results dir and ./filered_annotations dir
 echo "Done! Results in BASE/homer_results and BASE/filtered_annotations"
 
-echo "Starting enhancer_promoter_analysis.py..."
-python "$SCRIPT_DIR/enhancer_promoter_analysis.py" --input-dir "./filtered_annotations" # should produce motif_annotation_split dir
+echo "Starting enhancer_promotor_analysis.py..."
+python "$SCRIPT_DIR/enhancer_promotor_analysis.py" --input-dir "./filtered_annotations" # should produce motif_annotation_split dir
 echo "Done! Results in BASE/motif_annotation_split"
 
 echo "Starting GO BP enrichment with rGREAT run_GO_pipeline.sh..."
-bash "$SCRIPT_DIR/run_GO_pipeline.sh" "./filtered_annotations" # should produce ./rGREAT_results dir
+bash "$SCRIPT_DIR/run_GO_pipeline.sh" "./output/Mouse/mapping/conservative" # should produce ./rGREAT_results dir
 echo "Done! Results in BASE/rGREAT_results"
 
 echo "Full pipeline complete"
