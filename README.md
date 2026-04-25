@@ -77,7 +77,7 @@ BASE/
 To run the full pipeline, users can submit a slurm job of COMPLETE_ANALYSIS_PIPELINE.sh using the following command:
 
 ```
-sbatch COMPLETE_ANALYSIS_PIPELINE.sh <.hal filepath> <halper_map_peak_orthologs.sh path>"
+sbatch COMPLETE_ANALYSIS_PIPELINE.sh <.hal filepath> <halper_map_peak_orthologs.sh path>
 ```
 
 Example:
