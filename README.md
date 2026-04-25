@@ -4,7 +4,7 @@ The purpose of this pipeline is to provide complete analysis of IDR-conservative
 This analysis used human and mouse ATAC-Seq data from healthy adrenal gland tissue in female subjects. Human data was from the ENCODE database (ENCSR241OBO and ENCSR864ADD) and mouse data was from Liu et al., Scientific Data, 2019. Reference genomes used throughout analysis were hg38 and mm10 respectively. 
 
 ## Tutorial
-👉 [Open Tutorial](https://BioinformaticsDataPracticum2026.github.io/looking_spleentacular/tutorial.html)
+👉 [Open Tutorial](https://BioinformaticsDataPracticum2026.github.io/AdrenalGland_ATAC-Seq_Analysis/tutorial.html)
 ## Installation Instructions:
 This tool was designed for a Linux SLURM cluster. To ensure smooth execution of COMPLETE_ANALYSIS_PIPELINE.sh, complete the following:
 
