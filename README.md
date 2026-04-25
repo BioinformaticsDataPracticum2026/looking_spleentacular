@@ -46,6 +46,14 @@ See detailed instructions at the [original repository](https://github.com/pfenni
 Add the directories with narrowPeak data to the current setup:
 
 ```
+# from base
+mkdir idr_reproducibility
+cd idr_reproducibility
+mkdir HumanAtac # add .narrowPeak.gz here
+mkdir MouseAtac # add .narrowPeak.gz here
+```
+
+```
 BASE/
 ├── hal/                                    # conda env (--conda-env), e.g. conda activate …/hal
 │   └── …
@@ -85,11 +93,9 @@ RUN_FULL_PIPELINE/
 ├── COMPLETE_ANALYSIS_PIPELINE.sh
 ├── scripts called by COMPLETE_ANALYSIS_PIPELINE.sh...
 │
-├── results/    									# output from mapping                              
-│   ├── conservative/                            
-│       ├── narrowPeak/
-│       	├── shared_peaks_conservative.narrowPeak
-│       	└── …
+├── output/Mouse/mapping/conservative				# output from mapping                    
+│       ├── shared_peaks_conservative.narrowPeak
+│       └── …
 │
 ├── narrowPeak/										# select narrowPeak files, renamed for downstream analysis
 │   ├── shared_peaks.narrowPeak
