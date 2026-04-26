@@ -6,7 +6,7 @@ List HOMER nonRedundant motifs by assignment condition from filtered_annotations
       Mouse enhancers: enhancer rows in shared_peaks + mouse_specific 
   (b) Human promoters: promoter rows in shared + human_specific.
       Mouse promoters: promoter rows in shared_peaks + mouse_specific.
-  (c) Shared enhancers: enhancer rows in shared_peaks.txt only.
+  (c) Shared enhancers / shared promoters: enhancer or promoter rows in shared_peaks.txt only.
   (d) Species-specific enhancers: enhancer rows in human_specific vs mouse_specific.
 
 A motif is listed if it has >=1 non-empty hit in that peak set. 
@@ -97,6 +97,10 @@ def main() -> Path:
     write_sorted_motif_list(
         sub / "shared_enhancers_across_species_motifs.txt",
         motifs_with_annotation_hits(shared, e),
+    )
+    write_sorted_motif_list(
+        sub / "shared_promoters_across_species_motifs.txt",
+        motifs_with_annotation_hits(shared, pr),
     )
     write_sorted_motif_list(
         sub / "human_specific_enhancers_motifs.txt",
