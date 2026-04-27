@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATAC-seq Cross-Species Analysis Pipeline Tutorial</title>
+  <style>
+    :root {
+      --blue:    #2563eb;
+      --indigo:  #4338ca;
+      --purple:  #7c3aed;
+      --teal:    #0f766e;
+      --green:   #15803d;
+      --amber:   #b45309;
+      --red:     #dc2626;
+      --gray-50: #f9fafb;
+      --gray-100:#f3f4f6;
+      --gray-200:#e5e7eb;
+      --gray-300:#d1d5db;
+      --gray-400:#9ca3af;
+      --gray-500:#6b7280;
+      --gray-600:#4b5563;
+      --gray-700:#374151;
+      --gray-800:#1f2937;
+      --gray-900:#111827;
+      --radius:  12px;
+      --shadow:  0 10px 24px rgba(15, 23, 42, .08), 0 2px 6px rgba(15, 23, 42, .05);
+      --shadow-lg: 0 22px 50px rgba(15, 23, 42, .14);
+      --border: 1px solid rgba(148, 163, 184, .18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, .08), transparent 28%),
+        radial-gradient(circle at top right, rgba(15, 118, 110, .08), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #f6f8fc 52%, #f9fafb 100%);
+      color: var(--gray-800);
+      line-height: 1.7;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    .hero {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(125, 211, 252, .18), transparent 24%),
+        radial-gradient(circle at 80% 0%, rgba(45, 212, 191, .14), transparent 28%),
+        linear-gradient(135deg, #0f172a 0%, #172554 42%, #0f766e 100%);
+      color: #fff;
+      padding: 64px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.06), transparent 35%),
+        url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M36 10l6.5 19.8H63L46.2 42l6.4 20L36 49.6 19.4 62l6.4-20L9 29.8h20.5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      border-radius: 99px;
+      padding: 6px 16px;
+      font-size: .76rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .hero p {
+      max-width: 640px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      opacity: .9;
+      position: relative;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Overview cards ─────────────────────────────────────── */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: -40px auto 48px;
+      position: relative;
+      z-index: 1;
+    }
+    .overview-card {
+      background: rgba(255,255,255,.96);
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .overview-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .overview-card h3 { font-size: .9rem; font-weight: 700; margin-bottom: 4px; }
+    .overview-card p  { font-size: .8rem; color: var(--gray-600); }
+
+    /* ── Section ────────────────────────────────────────────── */
+    .section {
+      margin-bottom: 56px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .step-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: .95rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+    .section-header .subtitle {
+      font-size: .85rem;
+      color: var(--gray-500, #6b7280);
+      margin-top: 2px;
+    }
+
+    /* ── Card ───────────────────────────────────────────────── */
+    .card {
+      background: rgba(255,255,255,.94);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .card-header {
+      padding: 14px 20px;
+      font-size: .85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(148, 163, 184, .14);
+      background: linear-gradient(180deg, rgba(248, 250, 252, .95), rgba(255,255,255,.88));
+    }
+    .card-body {
+      padding: 20px;
+    }
+    .card-body p, .card-body li {
+      font-size: .92rem;
+      color: var(--gray-700);
+    }
+    .card-body ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+    .card-body li { margin-bottom: 5px; }
+
+    /* ── Code block ─────────────────────────────────────────── */
+    .code-wrap {
+      background: var(--gray-900);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 18px 32px rgba(15, 23, 42, .14);
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .code-title {
+      background: var(--gray-800);
+      color: var(--gray-400);
+      padding: 8px 16px;
+      font-size: .78rem;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .code-title .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red   { background: #ff5f57; }
+    .dot-yellow{ background: #febc2e; }
+    .dot-green { background: #28c840; }
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-size: .82rem;
+      line-height: 1.6;
+    }
+    code {
+      font-family: 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+      color: #e2e8f0;
+    }
+
+    /* Inline code outside of dark code blocks */
+    :not(pre) > code {
+      background: #1e1b4b;
+      color: #c4b5fd;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: .85em;
+      font-weight: 500;
+      letter-spacing: .01em;
+    }
+    .kw  { color: #93c5fd; }
+    .fn  { color: #6ee7b7; }
+    .str { color: #fcd34d; }
+    .cm  { color: #6b7280; font-style: italic; }
+    .var { color: #c4b5fd; }
+
+    /* ── Pipeline flow diagram ───────────────────────────────── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin: 24px 0;
+    }
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .flow-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+      border: 2px solid currentColor;
+      border-radius: 14px;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, .08);
+      padding: 10px 18px;
+      min-width: 160px;
+      text-align: center;
+      position: relative;
+    }
+    .flow-node .node-icon { font-size: 1.5rem; margin-bottom: 4px; }
+    .flow-node .node-label { font-size: .8rem; font-weight: 700; }
+    .flow-node .node-sub   { font-size: .72rem; color: var(--gray-500, #6b7280); margin-top: 2px; }
+    .flow-arrow {
+      color: var(--gray-400);
+      font-size: 1.4rem;
+      font-weight: 300;
+    }
+    .flow-vline {
+      width: 2px;
+      height: 28px;
+      background: var(--gray-200);
+    }
+
+    /* ── Info / warn callouts ───────────────────────────────── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      gap: 12px;
+      margin: 16px 0;
+      font-size: .88rem;
+      border: var(--border);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, .05);
+    }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout.info    { background: #eff6ff; border-left: 4px solid var(--blue); }
+    .callout.tip     { background: #f0fdf4; border-left: 4px solid var(--green); }
+    .callout.warn    { background: #fffbeb; border-left: 4px solid var(--amber); }
+    .callout.output  { background: #fdf4ff; border-left: 4px solid var(--purple); }
+
+    /* ── I/O table ──────────────────────────────────────────── */
+    .io-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+      margin-top: 12px;
+    }
+    .io-table th {
+      background: var(--gray-100);
+      padding: 8px 14px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--gray-700);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .io-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      vertical-align: top;
+    }
+    .io-table tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: .72rem;
+      font-weight: 600;
+    }
+    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+    .badge-green  { background: #dcfce7; color: #15803d; }
+    .badge-purple { background: #ede9fe; color: #6d28d9; }
+    .badge-amber  { background: #fef3c7; color: #b45309; }
+
+    /* ── Two-column layout ──────────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) {
+      .two-col { grid-template-columns: 1fr; }
+      .flow-row { flex-direction: column; }
+    }
+
+    /* ── TOC / sidebar ──────────────────────────────────────── */
+    .toc-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,.8);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(148, 163, 184, .18);
+      padding: 12px 24px;
+    }
+    .toc-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .toc-inner::-webkit-scrollbar { display: none; }
+    .toc-link {
+      white-space: nowrap;
+      text-decoration: none;
+      color: var(--gray-600);
+      font-size: .78rem;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 999px;
+      transition: background .15s, color .15s, transform .15s;
+    }
+    .toc-link:hover {
+      background: rgba(37, 99, 235, .08);
+      color: var(--gray-900);
+      transform: translateY(-1px);
+    }
+
+    /* ── Divider ─────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 48px 0;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      background: var(--gray-900);
+      color: var(--gray-400);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: .82rem;
+    }
+    footer a { color: #93c5fd; text-decoration: none; }
+
+    /* ── Colors per step ─────────────────────────────────────── */
+    .c-blue   { color: var(--blue);   border-color: var(--blue); }
+    .c-indigo { color: var(--indigo); border-color: var(--indigo); }
+    .c-purple { color: var(--purple); border-color: var(--purple); }
+    .c-teal   { color: var(--teal);   border-color: var(--teal); }
+    .c-green  { color: var(--green);  border-color: var(--green); }
+    .c-amber  { color: var(--amber);  border-color: var(--amber); }
+    .bg-blue   { background: var(--blue);   }
+    .bg-indigo { background: var(--indigo); }
+    .bg-purple { background: var(--purple); }
+    .bg-teal   { background: var(--teal);   }
+    .bg-green  { background: var(--green);  }
+    .bg-amber  { background: var(--amber);  }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: .75rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .tag-sh  { background: #dbeafe; color: #1d4ed8; }
+    .tag-py  { background: #dcfce7; color: #166534; }
+    .tag-r   { background: #ede9fe; color: #5b21b6; }
+    .tag-slurm { background: #fef3c7; color: #92400e; }
+
+    main {
+      padding: 48px 0 64px;
+    }
+
+    .soft-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,250,252,.92));
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .quickstart-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 10px;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 8px;
+      color: var(--gray-700);
+      font-size: .88rem;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    .mini-note {
+      font-size: .8rem;
+      color: var(--gray-600);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 780px) {
+      .quickstart-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<div class="hero">
+  <div class="hero-badge">Bioinformatics Pipeline</div>
+  <h1>ATAC-seq Cross-Species<br>Comparative Analysis</h1>
+  <p>
+    A step-by-step tutorial for mapping, classifying, and functionally annotating
+    open-chromatin peaks across human and mouse genomes using
+    HALPER, BEDTools, HOMER, and rGREAT.
+  </p>
+</div>
+
+<!-- ═══════════════════ TOC ═══════════════════ -->
+<div class="toc-bar">
+  <nav class="toc-inner">
+    <a class="toc-link" href="#overview">Overview</a>
+    <a class="toc-link" href="#step1">1 · Unzip Peaks</a>
+    <a class="toc-link" href="#step2">2 · HALPER Mapping</a>
+    <a class="toc-link" href="#step3">3 · BEDTools</a>
+    <a class="toc-link" href="#step4">4 · HOMER</a>
+    <a class="toc-link" href="#step5">5 · Enhancer/Promoter</a>
+    <a class="toc-link" href="#step6">6 · Motif Analysis</a>
+    <a class="toc-link" href="#step7">7 · GO Enrichment</a>
+    <a class="toc-link" href="#quickstart">Quickstart</a>
+  </nav>
+</div>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+<div class="container">
+
+  <!-- ── Overview Cards ── -->
+  <div class="overview-grid" id="overview">
+    <div class="overview-card">
+      <div class="overview-icon bg-blue" style="color:#fff;">🧬</div>
+      <div>
+        <h3>Species</h3>
+        <p>Human (hg38) &amp; Mouse (mm10) ATAC-seq IDR peaks</p>
+      </div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-icon bg-indigo" style="color:#fff;">🔗</div>
+      <div>
+        <h3>Ortholog Mapping</h3>
+        <p>HALtools + HALPER lifts mouse peaks to human coordinates</p>
+      </div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-icon bg-teal" style="color:#fff;">✂️</div>
+      <div>
+        <h3>Peak Classes</h3>
+        <p>Shared, human-specific, and mouse-specific open-chromatin regions</p>
+      </div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-icon bg-purple" style="color:#fff;">📈</div>
+      <div>
+        <h3>Functional Analysis</h3>
+        <p>HOMER motifs, enhancer/promoter annotation, and rGREAT GO enrichment</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pipeline Flow ── -->
+  <div class="section">
+    <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:20px; color:var(--gray-700); text-align:center; letter-spacing:.02em; text-transform:uppercase;">Full Pipeline Flow</h2>
+    <div class="card">
+      <div class="card-body" style="padding:28px;">
+        <div class="flow">
+          <div class="flow-row">
+            <div class="flow-node c-blue">
+              <div class="node-icon">🗜️</div>
+              <div class="node-label">unzip_narrowPeak.sh</div>
+              <div class="node-sub">Decompress IDR peaks</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node c-indigo">
+              <div class="node-icon">🔗</div>
+              <div class="node-label">halper_map_peak_orthologs</div>
+              <div class="node-sub">Mouse → Human coords</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node c-teal">
+              <div class="node-icon">✂️</div>
+              <div class="node-label">bedtool_evaluation.sh</div>
+              <div class="node-sub">Intersect &amp; classify</div>
+            </div>
+          </div>
+          <div class="flow-vline"></div>
+          <div class="flow-row">
+            <div class="flow-node c-purple" style="min-width:200px;">
+              <div class="node-icon">🧩</div>
+              <div class="node-label">integrate_halper.sh</div>
+              <div class="node-sub">Mouse-coord narrowPeak rebuild</div>
+            </div>
+          </div>
+          <div class="flow-vline"></div>
+          <div class="flow-row">
+            <div class="flow-node c-green">
+              <div class="node-icon">🧬</div>
+              <div class="node-label">HOMER annotation</div>
+              <div class="node-sub">annotatePeaks + findMotifs</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node c-teal">
+              <div class="node-icon">🧾</div>
+              <div class="node-label">extract_promoters_enhancers.sh</div>
+              <div class="node-sub">Filter + classify regions</div>
+            </div>
+          </div>
+          <div class="flow-vline"></div>
+          <div class="flow-row">
+            <div class="flow-node c-blue">
+              <div class="node-icon">🔬</div>
+              <div class="node-label">enhancer_promoter_analysis.py</div>
+              <div class="node-sub">Motif-per-condition lists</div>
+            </div>
+            <div class="flow-arrow" style="font-size:1.2rem;">→</div>
+            <div class="flow-node c-amber">
+              <div class="node-icon">📈</div>
+              <div class="node-label">rgreat_pipeline.R</div>
+              <div class="node-sub">GO:BP / MF / CC enrichment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ STEP 1 ═══ -->
+  <section class="section" id="step1">
+    <div class="section-header">
+      <div class="step-badge bg-blue">1</div>
+      <div>
+        <h2>Decompress IDR Peak Files</h2>
+        <div class="subtitle">unzip_narrowPeak.sh <span class="tag tag-sh">bash</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header c-blue">
+        <span>🧬</span> What this step does
+      </div>
+      <div class="card-body">
+        <p>Decompresses the gzipped <code>idr.conservative_peak.narrowPeak.gz</code>
+        files for both species so downstream tools can read them directly.</p>
+        <div class="callout info">
+          <div class="callout-icon">ℹ️</div>
+          <div>Conservative IDR peaks are the high-confidence reproducible peaks
+          obtained by the ENCODE ATAC-seq processing pipeline.
+          The <code>.narrowPeak</code> format is a 10-column BED extension used
+          by ENCODE and HOMER.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        unzip_narrowPeak.sh
+      </div>
+      <pre><code><span class="cm"># Decompress mouse peaks</span>
+<span class="fn">cd</span> <span class="str">"${BASE}/MouseAtac/AdrenalGland/peak/idr_reproducibility"</span>
+<span class="fn">zcat</span> idr.conservative_peak.narrowPeak.gz &gt; idr.conservative_peak.narrowPeak
+
+<span class="cm"># Decompress human peaks</span>
+<span class="fn">cd</span> <span class="str">"${BASE}/HumanAtac/peak/idr_reproducibility"</span>
+<span class="fn">zcat</span> idr.conservative_peak.narrowPeak.gz &gt; idr.conservative_peak.narrowPeak</code></pre>
+    </div>
+
+    <table class="io-table">
+      <thead><tr><th>Type</th><th>Path pattern</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">Input</span></td><td><code>…/idr_reproducibility/idr.conservative_peak.narrowPeak.gz</code></td><td>Gzipped ENCODE IDR peaks (mouse &amp; human)</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>…/idr_reproducibility/idr.conservative_peak.narrowPeak</code></td><td>Plain-text narrowPeak (10-col BED)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ STEP 2 ═══ -->
+  <section class="section" id="step2">
+    <div class="section-header">
+      <div class="step-badge bg-indigo">2</div>
+      <div>
+        <h2>Cross-Species Peak Mapping with HALPER</h2>
+        <div class="subtitle">integrate_halper.sh · halper_map_peak_orthologs.sh <span class="tag tag-sh">bash</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header c-indigo">
+        <span>🔗</span> What this step does
+      </div>
+      <div class="card-body">
+        <p>Uses <strong>HALtools</strong> (the Hierarchical Alignment Format) and
+        <strong>HALPER</strong> (HAL Peak Ortholog Regions) to lift mouse
+        ATAC-seq peaks from mm10 into hg38 coordinates using a
+        whole-genome multiple-alignment (the 10-way <code>.hal</code> file).</p>
+        <ul>
+          <li>The <code>-s Mouse -t Human</code> flags specify the source and
+              target species in the alignment tree.</li>
+          <li>HALPER applies filters to retain only peaks with good
+              orthologous coverage (the "conservative" output).</li>
+          <li>A final <strong>awk join</strong> rebuilds mouse-specific peaks
+              back in original mm10 coordinates using the HAL name field
+              (<code>chr:start-end:summit</code>) as the join key.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        integrate_halper.sh – Usage
+      </div>
+      <pre><code><span class="fn">bash</span> <span class="str">"$SCRIPT_DIR/integrate_halper.sh"</span> \
+  <span class="kw">--base</span>       <span class="str">"$SCRIPT_DIR"</span> \
+  <span class="kw">--hal-file</span>   <span class="str">"$HAL_FILE"</span> \
+  <span class="kw">--halper-map</span> <span class="str">"$HALPER_MAP"</span></code></pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        Core HALPER invocation (inside integrate_halper.sh)
+      </div>
+      <pre><code><span class="kw">export</span> <span class="var">PATH</span>=<span class="str">"${HAL_BIN}:${PATH}"</span>
+<span class="kw">export</span> <span class="var">PYTHONPATH</span>=<span class="str">"${HALPER_PP}:${PYTHONPATH:-}"</span>
+<span class="fn">mkdir</span> -p <span class="str">"${HALPER_OUT}"</span>
+
+<span class="fn">bash</span> <span class="str">"${HALPER_MAP_SH}"</span> \
+  -b <span class="str">"${MOUSE_CONSERVATIVE_NARROWPEAK}"</span> \  <span class="cm"># input mouse peaks</span>
+  -o <span class="str">"${HALPER_OUT}/"</span>                    \  <span class="cm"># output directory</span>
+  -s Mouse                              \  <span class="cm"># source species</span>
+  -t Human                              \  <span class="cm"># target species</span>
+  -c <span class="str">"${HAL_FILE}"</span>                       <span class="cm"># whole-genome alignment</span></code></pre>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div><strong>Environment requirement:</strong> HALtools binaries must be on <code>$PATH</code>
+      and <code>halLiftover-postprocessing</code> must be on <code>$PYTHONPATH</code>.
+      These are exported directly by the script; the conda environment is activated
+      beforehand by <code>complete_analysis_pipeline.sh</code>.</div>
+    </div>
+
+    <table class="io-table">
+      <thead><tr><th>Type</th><th>File</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">Input</span></td><td><code>idr.conservative_peak.narrowPeak</code></td><td>Mouse peaks (mm10)</td></tr>
+        <tr><td><span class="badge badge-blue">Input</span></td><td><code>10plusway-master.hal</code></td><td>Multi-species Cactus alignment</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>idr.conservative_peak.MouseToHuman.HALPER.narrowPeak.gz</code></td><td>Mouse peaks lifted to hg38</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ STEP 3 ═══ -->
+  <section class="section" id="step3">
+    <div class="section-header">
+      <div class="step-badge bg-teal">3</div>
+      <div>
+        <h2>Peak Classification with BEDTools</h2>
+        <div class="subtitle">bedtool_evaluation.sh <span class="tag tag-sh">bash</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header c-teal">
+        <span>✂️</span> What this step does
+      </div>
+      <div class="card-body">
+        <p>Performs <strong>three BEDTools intersect</strong> operations to classify peaks
+        into three mutually exclusive categories, all in human (hg38) coordinates:</p>
+        <div class="two-col" style="margin-top:16px; gap:12px;">
+          <div style="background:#f0fdf4; border-radius:8px; padding:14px; border-left:3px solid var(--teal);">
+            <strong style="font-size:.85rem; color:var(--teal);">🟢 Shared peaks</strong>
+            <p style="font-size:.82rem; margin-top:6px;">Mouse-lifted peaks that <em>overlap</em> human IDR peaks → conserved accessible chromatin</p>
+          </div>
+          <div style="background:#eff6ff; border-radius:8px; padding:14px; border-left:3px solid var(--blue);">
+            <strong style="font-size:.85rem; color:var(--blue);">🔵 Human-specific</strong>
+            <p style="font-size:.82rem; margin-top:6px;">Human IDR peaks that do <em>not</em> overlap lifted mouse peaks</p>
+          </div>
+          <div style="background:#fdf4ff; border-radius:8px; padding:14px; border-left:3px solid var(--purple);">
+            <strong style="font-size:.85rem; color:var(--purple);">🟣 Mouse-specific</strong>
+            <p style="font-size:.82rem; margin-top:6px;">Lifted mouse peaks that do <em>not</em> overlap human IDR peaks (non-reciprocal)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        bedtool_evaluation.sh – key commands
+      </div>
+      <pre><code><span class="cm"># Sort both files by chromosome then start position</span>
+<span class="fn">sort</span> -k1,1 -k2,2n mouse_to_human_conservative.narrowPeak \
+     &gt; mouse_to_human_conservative.sorted.narrowPeak
+
+<span class="fn">sort</span> -k1,1 -k2,2n <span class="str">"${HUMAN_CONSERVATIVE_NARROWPEAK}"</span> \
+     &gt; human_conservative.sorted.narrowPeak
+
+<span class="cm"># Shared: mouse peaks that overlap human peaks</span>
+<span class="fn">bedtools</span> intersect \
+  -a mouse_to_human_conservative.sorted.narrowPeak \
+  -b human_conservative.sorted.narrowPeak \
+  -u &gt; shared_peaks_conservative.narrowPeak
+
+<span class="cm"># Mouse-specific: lifted mouse peaks NOT in human</span>
+<span class="fn">bedtools</span> intersect \
+  -a mouse_to_human_conservative.sorted.narrowPeak \
+  -b human_conservative.sorted.narrowPeak \
+  -v &gt; mouse_specific_peaks_conservative.narrowPeak
+
+<span class="cm"># Human-specific: human peaks NOT in lifted mouse</span>
+<span class="fn">bedtools</span> intersect \
+  -a human_conservative.sorted.narrowPeak \
+  -b mouse_to_human_conservative.sorted.narrowPeak \
+  -v &gt; human_specific_peaks_conservative.narrowPeak</code></pre>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">🧠</div>
+      <div>The <code>-u</code> flag reports each query feature once if it overlaps any subject feature
+      (regardless of how many times). The <code>-v</code> flag is the complement —
+      query features with <em>no</em> overlap.</div>
+    </div>
+
+    <table class="io-table">
+      <thead><tr><th>Type</th><th>File</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>shared_peaks_conservative.narrowPeak</code></td><td>Shared peaks (human coords, hg38)</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>human_specific_peaks_conservative.narrowPeak</code></td><td>Human-specific peaks (hg38)</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>mouse_specific_peaks_conservative.narrowPeak</code></td><td>Mouse-specific peaks (human coords, hg38)</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>mouse_specific_peaks_conservative.mouse_coords.narrowPeak</code></td><td>Mouse-specific peaks in mm10 (awk join)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ STEP 4 ═══ -->
+  <section class="section" id="step4">
+    <div class="section-header">
+      <div class="step-badge bg-green">4</div>
+      <div>
+        <h2>HOMER Motif Finding &amp; Peak Annotation</h2>
+        <div class="subtitle">run_homer_on_dir.sh · run_full_annotatePeaks_findMotifs.sh <span class="tag tag-sh">bash</span> <span class="tag tag-slurm">SLURM</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header c-green">
+        <span>🧬</span> What this step does
+      </div>
+      <div class="card-body">
+        <p>For each of the three peak sets
+        (<em>shared, human_specific, mouse_specific</em>):</p>
+        <ul>
+          <li><strong>Convert</strong> narrowPeak → HOMER-compatible 6-column BED
+              (centering each peak at its summit).</li>
+          <li>Run <strong>findMotifsGenome.pl</strong> — de-novo and known-motif
+              enrichment, genome-masked, 200 bp windows.</li>
+          <li>Run <strong>annotatePeaks.pl</strong> — annotate each peak with
+              nearest gene, TSS distance, and motif instance hits from
+              the nonRedundant motif set.</li>
+          <li>Genome: <code>hg38</code> for human/shared peaks,
+              <code>mm10</code> for mouse-specific peaks (auto-detected from filename).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        run_homer_on_dir.sh – summit-centered BED conversion
+      </div>
+      <pre><code><span class="fn">awk</span> <span class="str">'BEGIN{OFS="\t"} {
+    chr=$1; start=$2; end=$3
+    name=$4; score=$5; strand=$6; summit=$10
+    if (summit != -1 && summit != ".") {
+        center = start + summit
+        print chr, center-1, center, name, score, \
+              (strand=="." ? "+" : strand)
+    } else {
+        print chr, start, end, name, score, \
+              (strand=="." ? "+" : strand)
+    }
+}'</span> <span class="str">"$NARROWPEAK_FILE"</span> &gt; <span class="str">"$BED_FILE"</span></code></pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        HOMER commands
+      </div>
+      <pre><code><span class="cm"># [1/2] Find enriched motifs</span>
+<span class="fn">findMotifsGenome.pl</span> \
+    <span class="str">"$BED_FILE"</span> <span class="str">"$GENOME"</span> <span class="str">"$MOTIF_DIR"</span> \
+    -size 200 -mask
+
+<span class="cm"># [2/2] Annotate peaks with motif instances</span>
+<span class="fn">annotatePeaks.pl</span> \
+    <span class="str">"$BED_FILE"</span> <span class="str">"$GENOME"</span> \
+    -m  <span class="str">"${MOTIF_DIR}/nonRedundant.motifs"</span> \
+    -mbed <span class="str">"${SAMPLE_DIR}/motif_instances.bed"</span> \
+    -size 200 \
+    &gt; <span class="str">"$ANNO_FILE"</span></code></pre>
+    </div>
+
+    <div class="callout output">
+      <div class="callout-icon">📂</div>
+      <div>
+        <strong>Output directory structure:</strong>
+        <pre style="margin-top:8px; font-size:.8rem; background:none; padding:0; color:var(--gray-700);">homer_results/
+  shared_peaks/
+    peaks_homer.bed
+    motifs/
+      nonRedundant.motifs
+      homerResults.html
+    annotated_peaks.txt
+    motif_instances.bed
+  human_specific/  (same layout)
+  mouse_specific/  (same layout)</pre>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div>This step is submitted as a <strong>SLURM job</strong>
+      (<code>#SBATCH --cpus-per-task=4 --mem=8000M --time=8:00:00</code>).
+      Ensure HOMER is in <code>$PATH</code> by providing <code>&lt;bin_path&gt;</code> as the
+      second argument.</div>
+    </div>
+  </section>
+
+  <!-- ═══ STEP 5 ═══ -->
+  <section class="section" id="step5">
+    <div class="section-header">
+      <div class="step-badge bg-teal">5</div>
+      <div>
+        <h2>Enhancer &amp; Promoter Extraction</h2>
+        <div class="subtitle">extract_promoters_enhancers.sh · plot_promoters_enhancers.R <span class="tag tag-sh">bash</span> <span class="tag tag-r">R</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header c-teal">
+        <span>🧾</span> What this step does
+      </div>
+      <div class="card-body">
+        <p>Parses each <code>annotated_peaks.txt</code> file with <strong>awk</strong>
+        to extract a minimal table containing only peaks annotated as
+        <em>enhancers</em> or <em>promoters</em>:</p>
+        <ul>
+          <li><strong>Enhancer</strong>: intergenic or intronic regions &gt;2 kb from any TSS,
+              or anything already labeled "enhancer" by HOMER.</li>
+          <li><strong>Promoter</strong>: any region containing "promoter" in the HOMER annotation.</li>
+          <li>Motif hit columns (Distance From Peak) are preserved for downstream analysis.</li>
+          <li>After filtering, calls <code>plot_promoters_enhancers.R</code> to generate
+              bar charts and <code>motif_table.R</code> to summarize the top motifs.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        extract_promoters_enhancers.sh – AWK filter
+      </div>
+      <pre><code><span class="fn">awk</span> -F<span class="str">'\t'</span> <span class="str">'BEGIN {OFS="\t"}
+NR==1 {
+    # Detect column positions dynamically from header
+    for (i=2; i<=NF; i++) {
+        if ($i=="Annotation")      annot = i
+        if ($i=="Distance to TSS") dist  = i
+        if ($i ~ /Distance From Peak/) motif_cols[n_motifs++] = i
+    }
+    # Build output header: PeakID + Annotation + motif cols
+    header = "PeakID\tAnnotation"
+    for (m=0; m&lt;n_motifs; m++) header = header "\t" $motif_cols[m]
+    print header; next
+}
+{
+    new_annot = ""
+    # Enhancer: intergenic/intronic AND > 2000 bp from TSS, or labeled enhancer
+    if (((tolower($annot) ~ /intergenic/ || tolower($annot) ~ /intron/)
+         &amp;&amp; $dist >= 2000) || (tolower($annot) ~ /enhancer/))
+        new_annot = "enhancer"
+    # Promoter: labeled "promoter"
+    else if (tolower($annot) ~ /promoter/)
+        new_annot = "promoter"
+    # Only print classified peaks
+    if (new_annot != "") { ... print ... }
+}'</span></code></pre>
+    </div>
+
+    <table class="io-table">
+      <thead><tr><th>Type</th><th>File</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">Input</span></td><td><code>homer_results/*/annotated_peaks.txt</code></td><td>Full HOMER annotation (one per peak set)</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/shared_peaks.txt</code></td><td>Enhancer/promoter-filtered rows for the shared peak set</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/human_specific.txt</code></td><td>Filtered annotations for the human-specific peak set</td></tr>
+        <tr><td><span class="badge badge-green">Output</span></td><td><code>filtered_annotations/mouse_specific.txt</code></td><td>Filtered annotations for the mouse-specific peak set</td></tr>
+        <tr><td><span class="badge badge-purple">Plot</span></td><td><code>filtered_annotations/*.png</code></td><td>Enhancer vs promoter bar charts</td></tr>
+        <tr><td><span class="badge badge-purple">Table</span></td><td><code>filtered_annotations/*_motif_table.tsv</code></td><td>Top-N motifs per sample with annotations</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ STEP 6 ═══ -->
+  <section class="section" id="step6">
+    <div class="section-header">
+      <div class="step-badge bg-purple">6</div>
+      <div>
+        <h2>Motif Analysis by Biological Condition</h2>
+        <div class="subtitle">enhancer_promoter_analysis.py <span class="tag tag-py">Python</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header c-purple">
+        <span>🔬</span> What this step does
+      </div>
+      <div class="card-body">
+        <p>Reads the <code>filtered_annotations/</code> tables generated from HOMER and produces
+        <strong>motif presence lists per biological assignment condition</strong>.
+        A motif is included if it has ≥ 1 non-empty hit in a given peak set
+        and annotation category:</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;">
+          <div style="background:var(--gray-50); border-radius:7px; padding:12px; border:1px solid var(--gray-200);">
+            <div style="font-size:.78rem; font-weight:700; color:var(--blue); margin-bottom:6px;">ENHANCERS</div>
+            <ul style="font-size:.8rem; padding-left:16px; color:var(--gray-700);">
+              <li>Human enhancers = shared + human-specific</li>
+              <li>Mouse enhancers = shared + mouse-specific</li>
+              <li>Shared enhancers = shared only</li>
+              <li>Human-specific enhancers</li>
+              <li>Mouse-specific enhancers</li>
+            </ul>
+          </div>
+          <div style="background:var(--gray-50); border-radius:7px; padding:12px; border:1px solid var(--gray-200);">
+            <div style="font-size:.78rem; font-weight:700; color:var(--indigo); margin-bottom:6px;">PROMOTERS</div>
+            <ul style="font-size:.8rem; padding-left:16px; color:var(--gray-700);">
+              <li>Shared promoters = shared only</li>
+              <li>Human promoters = shared + human-specific</li>
+              <li>Mouse promoters = shared + mouse-specific</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        enhancer_promoter_analysis.py – Usage
+      </div>
+      <pre><code><span class="fn">python</span> enhancer_promoter_analysis.py \
+  --input-dir  ./filtered_annotations \
+  --output-dir ./motif_annotation_split</code></pre>
+    </div>
+
+    <div class="callout output">
+      <div class="callout-icon">📂</div>
+      <div>
+        <strong>Output:</strong> <code>motif_annotation_split/assignment_conditions/</code>
+        <pre style="margin-top:8px; font-size:.8rem; background:none; padding:0; color:var(--gray-700);">human_enhancers_motifs.txt
+mouse_enhancers_motifs.txt
+human_promoters_motifs.txt
+mouse_promoters_motifs.txt
+shared_promoters_across_species_motifs.txt
+shared_enhancers_across_species_motifs.txt
+human_specific_enhancers_motifs.txt
+mouse_specific_enhancers_motifs.txt</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ STEP 7 ═══ -->
+  <section class="section" id="step7">
+    <div class="section-header">
+      <div class="step-badge bg-amber">7</div>
+      <div>
+        <h2>GO Enrichment with rGREAT</h2>
+        <div class="subtitle">run_GO_pipeline.sh · rgreat_pipeline.R <span class="tag tag-sh">bash</span> <span class="tag tag-r">R</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header c-amber">
+        <span>📈</span> What this step does
+      </div>
+      <div class="card-body">
+        <p>Runs <strong>rGREAT</strong> (Genomic Regions Enrichment of Annotations Tool)
+        on the four peak sets resolved by <code>run_GO_pipeline.sh</code> to find enriched Gene Ontology terms:</p>
+        <ul>
+          <li>Reads 3-column BED (chr, start, end) from each narrowPeak file;
+              non-standard chromosomes are filtered out.</li>
+          <li>Runs GO enrichment for <strong>BP</strong>, <strong>MF</strong>,
+              and <strong>CC</strong> ontologies.</li>
+          <li>Generates <code>.tsv</code> result tables and
+              publication-style <strong>dot-plots</strong> (top 20 terms, fold
+              enrichment vs −log₁₀ p-adj).</li>
+        </ul>
+
+        <table class="io-table" style="margin-top:14px;">
+          <thead><tr><th>Peak set</th><th>Genome</th></tr></thead>
+          <tbody>
+            <tr><td>mouse_specific</td><td>mm10</td></tr>
+            <tr><td>human_specific</td><td>hg38</td></tr>
+            <tr><td>conserved (mouse in human coords)</td><td>hg38</td></tr>
+            <tr><td>conserved (human in mouse coords)</td><td>mm10</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        run_GO_pipeline.sh – Usage
+      </div>
+      <pre><code><span class="fn">bash</span> run_GO_pipeline.sh \
+  ./filtered_annotations \   <span class="cm"># directory scanned for the 4 expected peak files</span>
+  ./rGREAT_results           <span class="cm"># output directory (default: rGREAT_results)</span></code></pre>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div><code>run_GO_pipeline.sh</code> currently locates input files by filename pattern, including
+      <code>*mouse_specific_peaks_conservative*.narrowPeak</code>,
+      <code>*human_specific_peaks_conservative*.narrowPeak</code>,
+      <code>*mouse_to_human_conservative*.narrowPeak</code>, and
+      <code>*human_conservative*.narrowPeak</code>.</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        rgreat_pipeline.R – core GREAT call
+      </div>
+      <pre><code><span class="cm"># Read narrowPeak as GRanges (3-col BED, standard chroms only)</span>
+gr &lt;- read_bed3(file)
+
+<span class="cm"># GO:BP enrichment</span>
+job_bp &lt;- <span class="fn">great</span>(gr = gr, tss_source = genome, gene_sets = <span class="str">"GO:BP"</span>)
+tbl_bp &lt;- <span class="fn">getEnrichmentTable</span>(job_bp)
+
+<span class="cm"># Also run GO:MF and GO:CC</span>
+job_mf &lt;- <span class="fn">great</span>(gr = gr, tss_source = genome, gene_sets = <span class="str">"GO:MF"</span>)
+job_cc &lt;- <span class="fn">great</span>(gr = gr, tss_source = genome, gene_sets = <span class="str">"GO:CC"</span>)
+
+<span class="cm"># Publication dot-plot (top 20 terms)</span>
+p &lt;- <span class="fn">ggplot</span>(plot_tbl, <span class="fn">aes</span>(x = fold_enrichment, y = description,
+          size = observed_region_hits, fill = log10_p_adjust)) +
+  <span class="fn">geom_point</span>(alpha = 0.9, shape = 21) +
+  <span class="fn">scale_fill_distiller</span>(palette = <span class="str">"YlOrRd"</span>, direction = 1) +
+  <span class="fn">theme_classic</span>(base_size = 14)</code></pre>
+    </div>
+
+    <div class="callout output">
+      <div class="callout-icon">📈</div>
+      <div>
+        <strong>Output files in <code>rGREAT_results/</code>:</strong>
+        <ul style="margin-top:8px; font-size:.82rem;">
+          <li><code>mouse_specific_GO_BP.tsv</code> (and MF, CC variants)</li>
+          <li><code>human_specific_GO_BP.tsv</code></li>
+          <li><code>conserved_*_GO_BP.tsv</code></li>
+          <li><code>ALL_significant_terms_BP.tsv</code> — merged table of all significant terms (p_adj &lt; 0.05)</li>
+          <li><code>*_GO_BP_dotplot.png</code> — publication-ready figures</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ QUICKSTART ═══ -->
+  <section class="section" id="quickstart">
+    <div class="section-header">
+      <div class="step-badge" style="background:var(--gray-800);">⚙️</div>
+      <div>
+        <h2>Quickstart — Run the Full Pipeline</h2>
+        <div class="subtitle">complete_analysis_pipeline.sh <span class="tag tag-sh">bash</span> <span class="tag tag-slurm">SLURM</span></div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">ℹ️</div>
+      <div>The master script <code>complete_analysis_pipeline.sh</code> orchestrates
+      mapping, HOMER annotation, promoter/enhancer splitting, motif summarization, and GO analysis end-to-end. Submit it to SLURM with the two required arguments.</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        One-command submission
+      </div>
+      <pre><code><span class="fn">cd</span> RUN_FULL_PIPELINE
+
+<span class="fn">sbatch</span> complete_analysis_pipeline.sh \
+  /path/to/10plusway-master.hal \            <span class="cm"># ARG 1: .hal alignment file</span>
+  /path/to/halper_map_peak_orthologs.sh      <span class="cm"># ARG 2: HALPER mapping script</span></code></pre>
+    </div>
+
+    <div class="quickstart-grid">
+      <div class="soft-panel">
+        <div style="font-size:.86rem; font-weight:700; color:var(--gray-800); margin-bottom:6px;">Before you submit</div>
+        <ul class="checklist">
+          <li>Run from the <code>RUN_FULL_PIPELINE/</code> directory, because the script uses <code>${SLURM_SUBMIT_DIR}</code> as its base path.</li>
+          <li>Place HOMER executables under <code>RUN_FULL_PIPELINE/bin/</code>; the pipeline now picks up <code>BIN_PATH="$SCRIPT_DIR/bin"</code> automatically.</li>
+          <li>Keep the repository helper scripts in the same directory as <code>complete_analysis_pipeline.sh</code>.</li>
+          <li>Ensure the HAL alignment file and <code>halper_map_peak_orthologs.sh</code> path are absolute or resolvable from the submit location.</li>
+        </ul>
+      </div>
+      <div class="soft-panel">
+        <div style="font-size:.86rem; font-weight:700; color:var(--gray-800); margin-bottom:6px;">Pipeline order</div>
+        <ul class="checklist">
+          <li><code>integrate_halper.sh</code></li>
+          <li><code>run_full_annotatePeaks_findMotifs.sh</code></li>
+          <li><code>enhancer_promoter_analysis.py</code></li>
+          <li><code>run_GO_pipeline.sh</code></li>
+        </ul>
+        <div class="mini-note">Intermediate directories are created relative to the submission directory.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header" style="color:var(--gray-700);">
+        <span>⚙️</span> SLURM resource request
+      </div>
+      <div class="card-body">
+        <table class="io-table">
+          <thead><tr><th>Parameter</th><th>Value</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td>CPUs</td><td>4</td><td>Matches <code>--cpus-per-task=4</code> in the script header</td></tr>
+            <tr><td>Memory</td><td>8 GB</td><td>Matches <code>--mem=8000M</code></td></tr>
+            <tr><td>Wall time</td><td>18 h</td><td>Matches <code>--time=18:00:00</code>; HALPER and HOMER remain the slowest stages</td></tr>
+            <tr><td>Account</td><td>bio230007p</td><td>PSC Bridges-2 allocation</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-header" style="color:var(--gray-700);"><span>🗂️</span> Expected output layout after full run</div>
+      <div class="card-body">
+        <pre style="font-size:.82rem; color:var(--gray-700); background:var(--gray-50); padding:16px; border-radius:6px; border:1px solid var(--gray-200); overflow-x:auto; line-height:1.8;">$WORKDIR/
+├── bin/
+│   ├── annotatePeaks.pl
+│   └── findMotifsGenome.pl
+├── narrowPeak_for_homer/
+│   ├── shared_peaks.narrowPeak
+│   ├── human_specific.narrowPeak
+│   └── mouse_specific.narrowPeak
+├── homer_results/
+│   ├── shared_peaks/
+│   │   ├── annotated_peaks.txt
+│   │   ├── motif_instances.bed
+│   │   └── motifs/
+│   │       ├── nonRedundant.motifs
+│   │       └── homerResults.html
+│   ├── human_specific/     (same layout)
+│   └── mouse_specific/     (same layout)
+├── filtered_annotations/
+│   ├── shared_peaks.txt
+│   ├── human_specific.txt
+│   ├── mouse_specific.txt
+│   ├── *.png               ← enhancer/promoter bar charts
+│   └── *_motif_table.tsv   ← top motifs per sample
+├── motif_annotation_split/
+│   └── assignment_conditions/
+│       ├── human_enhancers_motifs.txt
+│       ├── mouse_enhancers_motifs.txt
+│       └── …
+└── rGREAT_results/
+    ├── *_GO_BP.tsv
+    ├── *_GO_MF.tsv
+    ├── *_GO_CC.tsv
+    ├── ALL_significant_terms_BP.tsv
+    └── *_dotplot.png</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Dependencies ═══ -->
+  <section class="section">
+    <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:20px; color:var(--gray-700);">Dependencies &amp; Requirements</h2>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><span>⚙️</span> Software</div>
+      <div class="card-body">
+        <ul>
+          <li><strong>HALtools</strong> — whole-genome alignment tools (conda env)</li>
+          <li><strong>HALPER</strong> — halLiftover-postprocessing suite</li>
+          <li><strong>BEDTools</strong> ≥ 2.29 (module load bedtools)</li>
+          <li><strong>HOMER</strong> — <code>annotatePeaks.pl</code>, <code>findMotifsGenome.pl</code>, placed under <code>RUN_FULL_PIPELINE/bin/</code></li>
+          <li><strong>Python</strong> ≥ 3.8 (stdlib only)</li>
+          <li><strong>R</strong> ≥ 4.1 with rGREAT, ggplot2, tidyverse</li>
+        </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span>🧬</span> R packages (auto-installed)</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>rGREAT</strong> — Bioconductor GO enrichment</li>
+            <li><strong>GenomicRanges</strong> / <strong>IRanges</strong></li>
+            <li><strong>TxDb.Mmusculus.UCSC.mm10.knownGene</strong></li>
+            <li><strong>ggplot2</strong>, <strong>dplyr</strong>, <strong>stringr</strong></li>
+            <li><strong>RColorBrewer</strong>, <strong>tidyverse</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+</main>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+  <p>
+    ATAC-seq Cross-Species Analysis Pipeline &nbsp;·&nbsp;
+    <a href="https://github.com/BioinformaticsDataPracticum2026/looking_spleentacular">looking_spleentacular</a>
+    &nbsp;·&nbsp; BioinformaticsDataPracticum 2026
+  </p>
+  <p style="margin-top:6px; opacity:.6;">
+    Tools: HALtools · HALPER · BEDTools · HOMER · rGREAT &nbsp;|&nbsp;
+    Genomes: hg38 (human) · mm10 (mouse)
+  </p>
+</footer>
+
+</body>
+</html>
