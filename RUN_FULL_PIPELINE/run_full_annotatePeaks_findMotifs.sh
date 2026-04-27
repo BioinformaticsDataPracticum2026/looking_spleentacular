@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$SLURM_SUBMIT_DIR"
+SCRIPT_DIR="${SLURM_SUBMIT_DIR:-$(pwd -P)}"
 WD="${3:-}"
 
 if [ "$#" -lt 2 ]; then
