@@ -18,7 +18,7 @@ Analyze the distribution of enhancer-like and promoter peaks across different ev
 Cross-tabulate transcription factor (TF) motif enrichment with regulatory element type (promoter vs enhancer-like) to identify TFs that preferentially associate with promoters or enhancers.
 
 **Steps:**
-- Read the HOMER motif result file (`knownResults.txt`) for each peak set.
+- Read the HOMER motif result file (`nonRedundant.txt`) for each peak set.
 - Parse the motif file and extract TF names.
 - (If annotation data is available) Cross-tabulate TF occurrence by regulatory type; otherwise, output the top 20 TFs for each peak set.
 
