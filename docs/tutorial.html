@@ -626,8 +626,7 @@
         <span>🧬</span> What this step does
       </div>
       <div class="card-body">
-        <p>Loads the <strong>conda/HAL environment</strong> and decompresses the
-        gzipped <code>idr.conservative_peak.narrowPeak.gz</code> files for both
+        <p>Decompresses the gzipped <code>idr.conservative_peak.narrowPeak.gz</code> files for both
         species so downstream tools can read them directly.</p>
         <div class="callout info">
           <div class="callout-icon">ℹ️</div>
@@ -646,11 +645,6 @@
         <span class="dot dot-green"></span>
         unzip_narrowPeak.sh
       </div>
-      <pre><code><span class="cm"># Activate HAL conda environment</span>
-<span class="fn">module</span> load anaconda3/2024.10-1
-<span class="fn">conda</span> activate <span class="str">"${BASE}/hal"</span>
-<span class="kw">export</span> <span class="var">PATH</span>=<span class="str">"${BASE}/repos/hal/bin:${PATH}"</span>
-
 <span class="cm"># Decompress mouse peaks</span>
 <span class="fn">cd</span> <span class="str">"${BASE}/MouseAtac/AdrenalGland/peak/idr_reproducibility"</span>
 <span class="fn">zcat</span> idr.conservative_peak.narrowPeak.gz &gt; idr.conservative_peak.narrowPeak
@@ -684,7 +678,7 @@
         <span>🔗</span> What this step does
       </div>
       <div class="card-body">
-        <p>Uses <strong>HALtools</strong> (the Hierarchical Alignment Format) and
+        <p>Uses <strong>halLiftover</strong> and
         <strong>HALPER</strong> (HAL Peak Ortholog Regions) to lift mouse
         ATAC-seq peaks from mm10 into hg38 coordinates using a
         whole-genome multiple-alignment (the 10-way <code>.hal</code> file).</p>
