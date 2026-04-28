@@ -10,7 +10,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager", repos = "http://cran.us.r-project.org")
 }
 
-required_pkgs <- c("rGREAT", "GenomicRanges", "IRanges")
+required_pkgs <- c("rGREAT", "GenomicRanges", "IRanges", "org.Mm.eg.db")
 for (pkg in required_pkgs) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     BiocManager::install(pkg, update = FALSE, ask = FALSE)
