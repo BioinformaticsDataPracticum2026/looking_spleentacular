@@ -1,9 +1,0 @@
-metric\tvalue
-human_consensus\t73481
-mouse_consensus\t29133
-human_reciprocal\t2354
-mouse_reciprocal\t1704
-human_species_specific\t71127
-mouse_species_specific\t27429
-human_mapped_overlap_mouse_consensus\t1029
-mouse_mapped_overlap_human_consensus\t5818
